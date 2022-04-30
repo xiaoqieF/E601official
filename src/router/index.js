@@ -2,6 +2,7 @@ import Vue from "vue"
 import VueRouter from "vue-router"
 
 const index = () => import('../page/index')
+const home = () => import('../page/home')
 
 Vue.use(VueRouter)
 
@@ -14,6 +15,12 @@ const router = new VueRouter({
         {
             path: '/home',
             component: index,
+            children: [
+                {
+                    path: '',
+                    component: home,
+                }
+            ]
         }
     ]
 })
