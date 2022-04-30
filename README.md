@@ -1,24 +1,8 @@
-# e601
+# E601官网
 
-## Project setup
-```
-npm install
-```
+## 介绍
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+本项目为BH E601实验室官方网站。使用vue2.0 + vue-router开发。  
 
-### Compiles and minifies for production
-```
-npm run build
-```
+维护人：fxd
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
