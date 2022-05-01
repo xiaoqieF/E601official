@@ -6,6 +6,11 @@ import './style/global.less'
 
 Vue.config.productionTip = false
 
+// 导入markdown插件
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+Vue.use(mavonEditor)
+
 // 引入图标字体
 import "./assets/iconfont/iconfont.css"
 // 引入github-markdown样式

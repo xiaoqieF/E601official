@@ -1,7 +1,8 @@
 import Vue from 'vue'
 
 import {MessageBox, Message, Button, Carousel, CarouselItem, Col, Row, Menu, MenuItem, Link, Card,
-        Image, Avatar, Pagination, Divider} from "element-ui";
+        Image, Avatar, Pagination, Divider, Form, FormItem, Input, DropdownMenu, Dropdown, DropdownItem,
+        Upload, Dialog, Select, Option, Checkbox, Empty} from "element-ui";
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
@@ -9,6 +10,7 @@ Vue.prototype.$confirm = MessageBox.confirm
 const element = {
     install: function (Vue) {
         Vue.use(Button)
+
         Vue.use(Carousel)
         Vue.use(CarouselItem)
         Vue.use(Col)
@@ -21,6 +23,18 @@ const element = {
         Vue.use(Avatar)
         Vue.use(Pagination)
         Vue.use(Divider)
+        Vue.use(Form)
+        Vue.use(FormItem)
+        Vue.use(Input)
+        Vue.use(Dropdown)
+        Vue.use(DropdownItem)
+        Vue.use(DropdownMenu)
+        Vue.use(Upload)
+        Vue.use(Dialog)
+        Vue.use(Select)
+        Vue.use(Option)
+        Vue.use(Checkbox)
+        Vue.use(Empty)
     }
 }
 
