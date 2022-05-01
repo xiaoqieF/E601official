@@ -17,7 +17,8 @@
                 <p class="content">这几天学习了卡尔曼滤波器（Kalman Filter）相关的理论知识，并发现了一个非常仔细的推导过程，是在b站上发现的一个搞控制的博士DR_CAN（文内有链接），看完他的卡尔曼滤波器相关的视频，加深了我对理论的理解，这里将视频中的推导过程加以梳理，以便日后查看。</p>
                 <div class="author-info">
                     <el-avatar size="small" :src="avatarUrl"></el-avatar>
-                    <span style="display: inline-block; margin-left: 10px">by 小切</span>
+                    <span style="display: inline-block; margin-left: 10px">by</span>
+                    <a href="#">小切</a>
                 </div>
                 <div class="btn">
                     <el-button type="primary">阅读原文<i class="el-icon-right"></i></el-button>
@@ -96,5 +97,12 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    a{
+        display: inline-block;
+        margin-left: 5px;
+    }
+    a:hover{
+        color: #409eff;
+    }
 }
 </style>

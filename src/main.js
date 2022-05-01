@@ -6,6 +6,9 @@ import './style/global.less'
 
 Vue.config.productionTip = false
 
+// 引入图标字体
+import "./assets/iconfont/iconfont.css"
+
 // 按需导入element-ui组件
 import element from './element'
 Vue.use(element)
