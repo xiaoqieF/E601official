@@ -3,6 +3,7 @@ import VueRouter from "vue-router"
 
 const index = () => import('../page/index')
 const home = () => import('../page/home')
+const users = () => import('../page/users')
 
 Vue.use(VueRouter)
 
@@ -19,7 +20,11 @@ const router = new VueRouter({
                 {
                     path: '',
                     component: home,
-                }
+                },
+                {
+                    path: '/users',
+                    component: users,
+                },
             ]
         }
     ]

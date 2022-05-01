@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 import {MessageBox, Message, Button, Carousel, CarouselItem, Col, Row, Menu, MenuItem, Link, Card,
-        Image, Avatar, Pagination} from "element-ui";
+        Image, Avatar, Pagination, Divider} from "element-ui";
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
@@ -20,6 +20,7 @@ const element = {
         Vue.use(Image)
         Vue.use(Avatar)
         Vue.use(Pagination)
+        Vue.use(Divider)
     }
 }
 
