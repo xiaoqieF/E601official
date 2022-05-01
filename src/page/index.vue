@@ -4,13 +4,13 @@
             <el-row>
                 <el-col :offset="6" :span="12">
                     <div class="nav-item">
-                        <router-link to="/home">首页</router-link>
+                        <router-link to="/home"><span class="iconfont icon-home" style="font-size: 20px"> </span>首页</router-link>
                     </div>
                     <div class="nav-item">
-                        <router-link to="/home">成员</router-link>
+                        <router-link to="/users"><span class="iconfont icon-person" style="font-size: 20px"> </span>成员</router-link>
                     </div>
                     <div class="nav-item">
-                        <router-link to="/home">关于</router-link>
+                        <router-link to="/about"><span class="iconfont icon-folder-open" style="font-size: 20px"> </span>关于</router-link>
                     </div>
                 </el-col>
                 <el-col :span="4">
@@ -22,7 +22,7 @@
                 </el-col>
             </el-row>
         </div>
-        <el-carousel height="100vh" :autoplay="true" :interval="5000">
+        <el-carousel height="80vh" :autoplay="true" :interval="5000">
             <el-carousel-item>
                 <img src="../assets/11.jpg" alt="" style="width: 100%">
             </el-carousel-item>
@@ -95,7 +95,7 @@ export default {
     position: fixed;
     z-index: 10;
     width: 100%;
-    background-color: #fff;
+    background-color: transparent;
     transition: transform 0.2s linear;
     .nav-item{
         display: inline-block;
@@ -104,8 +104,9 @@ export default {
         line-height: 60px;
         font-weight: 500;
         padding: 0 15px;
+        color: #fff;
         a{
-            color: #111;
+            color: #fff;
             display: inline-block;
         }
     }
@@ -118,7 +119,7 @@ export default {
         justify-content: center;
         align-items: center;
         height: 60px;
-        color: #111;
+        color: #fff;
         .sign{
             margin-left: 10px;
             cursor: pointer;
@@ -127,7 +128,7 @@ export default {
             color: #999;
         }
         a{
-            color: #111;
+            color: #fff;
             display: inline-block;
             margin-right: 10px;
         }
@@ -138,12 +139,12 @@ export default {
 }
 
 .header-nav-down{
-    background-color: #fff;
+    background-color: #333;
     transform: translateY(-100%);
 }
 .header-nav-up{
     transform: translateY(0);
-    background-color: #fff;
+    background-color: #333;
 }
 
 .footer{
@@ -151,14 +152,15 @@ export default {
     width: 100%;
     margin-top: 100px;
     text-align: center;
-    background-color: #444;
+    background-color: #333;
     font-size: 16px;
+    color: #eee;
     .foot-link{
         font-size: 16px;
-        color: #888;
+        color: #bbb;
     }
     .foot-link:hover{
-        color: #aaa;
+        color: #999;
     }
     .copyright{
         padding-top: 20px;
