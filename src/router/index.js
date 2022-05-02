@@ -10,6 +10,8 @@ const login = () => import('../page/login')
 const blogAdmin = () => import('../page/blogAdmin')
 const publish = () => import('../page/publish')
 const album = () => import('../page/album')
+const manage = () => import('../page/manage')
+const signUp = () => import('../page/signUp')
 
 
 Vue.use(VueRouter)
@@ -47,6 +49,10 @@ const router = new VueRouter({
             component: login,
         },
         {
+            path: '/signUp',
+            component: signUp,
+        },
+        {
             // 用户id作为路径参数
             path: '/admin/:id',
             component: blogAdmin,
@@ -59,6 +65,11 @@ const router = new VueRouter({
                 {
                     path: 'album',
                     component: album,
+                    meta: 'needAuth'
+                },
+                {
+                    path: 'manage',
+                    component: manage,
                     meta: 'needAuth'
                 },
             ]

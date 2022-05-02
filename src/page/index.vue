@@ -17,7 +17,7 @@
                     <div class="login">
                         <router-link to="/admin">登录</router-link>
                         <span>|</span>
-                        <span class="sign">注册</span>
+                        <router-link to="/signUp">注册</router-link>
                     </div>
                 </el-col>
             </el-row>
@@ -120,17 +120,10 @@ export default {
         align-items: center;
         height: 60px;
         color: #fff;
-        .sign{
-            margin-left: 10px;
-            cursor: pointer;
-        }
-        span:hover{
-            color: #999;
-        }
         a{
             color: #fff;
             display: inline-block;
-            margin-right: 10px;
+            margin: 10px;
         }
         a:hover{
             color: #999;
