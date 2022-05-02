@@ -1,6 +1,6 @@
 <template>
     <div class="album-item">
-        <el-image :src="url" :preview-src-list="srcList"></el-image>
+        <el-image :src="url"></el-image>
         <div class="album-title">
             喀纳斯秋绪
         </div>
@@ -13,24 +13,21 @@
         </div>
         <div class="album-author">
             <div>
-                <el-avatar size="small" :src="avatarUrl"></el-avatar>
-                <a href="#" style="display: inline-block; margin-left: 5px">小切</a>
+                创建时间：<span class="album-time"> 2022-04-26</span>
             </div>
-            <span class="album-time"> 2022-04-26</span>
+            <div>
+                修改时间：<span class="album-time"> 2022-04-26</span>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    name: "albumItem",
+    name: "albumItemAdmin",
     data() {
         return {
             url: "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            srcList:[
-                "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
-            ],
-            avatarUrl: "https://xiaodongfan.com/images/profile.png"
         }
     }
 }
@@ -38,30 +35,20 @@ export default {
 
 <style lang="less" scoped>
 .album-item{
-    margin-left: 1.5%;
-    width: 22%;
+    margin: 10px 2px;
+    width: 23%;
     font-size: 14px;
     line-height: 1.6;
-    margin-bottom: 40px;
     padding: 5px;
     border-radius: 0.2rem;
-    border: 1px solid #eee;
+    border: 2px solid #409eff;
+    cursor: pointer;
     .album-title{
         font-weight: 600;
-    }
-    .album-title:hover{
-        color: #409eff;
-        cursor: pointer;
     }
     .views{
         padding-bottom: 5px;
         border-bottom: 1px solid #ddd;
-    }
-    .like{
-        cursor: pointer;
-    }
-    .like:hover{
-        color: #409eff;
     }
     .album-author{
         padding-top: 5px;

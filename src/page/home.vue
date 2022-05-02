@@ -70,7 +70,6 @@ export default {
 
     .album-content{
         display: flex;
-        justify-content: space-between;
         flex-wrap: wrap;
     }
 }
