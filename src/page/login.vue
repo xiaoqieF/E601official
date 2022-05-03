@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import {login} from "@/utils/api";
+
 export default {
     name: 'login',
     data() {
@@ -63,7 +65,17 @@ export default {
         login() {
             this.$refs.loginFormRef.validate(async valid => {
                 if (valid) {
+                    const res = await login(this.loginForm);
+                    console.log(res);
+                    if (res.code !== 200) {
+                        this.$message.error(res.message);
+                        return;
+                    }
+                    this.$message.success("登录成功！");
 
+                    // 登录成功时保存服务端下发的token
+                    window.sessionStorage.setItem('token', res.data.token)
+                    await this.$router.push("/home");
                 }
             })
         }
