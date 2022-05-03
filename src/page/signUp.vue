@@ -6,7 +6,7 @@
                     <el-input v-model="userForm.username"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
-                    <el-input v-model="userForm.password"></el-input>
+                    <el-input v-model="userForm.password" type="password"></el-input>
                 </el-form-item>
                 <el-form-item label="昵称" prop="nickname">
                     <el-input v-model="userForm.nickname"></el-input>
@@ -23,18 +23,22 @@
                 <el-form-item label="个人简介" prop="description">
                     <el-input type="textarea" :rows="3" v-model="userForm.description"></el-input>
                 </el-form-item>
-                <el-upload
-                    class="el-upload"
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    :show-file-list="false"
-                    :on-success="handleAvatarSuccess"
-                    :before-upload="beforeAvatarUpload">
-                    <img v-if="userForm.avatar" :src="userForm.avatar" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon">上传头像</i>
-                </el-upload>
-                <el-form-item class="btn">
-                    <el-button type="primary" >注册</el-button>
-                    <el-button type="info" @click="reset">重置</el-button>
+                <el-form-item prop="avatar">
+                    <div class="buttons">
+                        <el-upload
+                            class="el-upload"
+                            :action="uploadUrl"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                            <img v-if="userForm.avatar" :src="userForm.avatar" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon">上传头像</i>
+                        </el-upload>
+                        <div>
+                            <el-button type="primary" @click="submit">注册</el-button>
+                            <el-button type="info" @click="reset">重置</el-button>
+                        </div>
+                    </div>
                 </el-form-item>
             </el-form>
         </div>
@@ -42,6 +46,8 @@
 </template>
 
 <script>
+import {signup} from "@/utils/api";
+import api from "@/utils/api"
 export default {
     name: "signUp",
     data() {
@@ -64,10 +70,11 @@ export default {
                 avatar: '',
                 site: '',
             },
+            uploadUrl: api.uploadAvatar,
             userFormRules: {
                 username: [
                     { required: true, message: '请输入用户名', trigger: 'blur' },
-                    { min: 1, max: 5, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+                    { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
                 ],
                 nickname: [
                     { required: true, message: '请输入昵称', trigger: 'blur' },
@@ -87,18 +94,46 @@ export default {
                 description: [
                     { required: true, message: '请输入个人简介', trigger: 'blur' },
                 ],
+                avatar: [
+                    { required: true, message: '请上传头像', trigger: 'blur' },
+                ]
             }
         }
     },
     methods: {
-        handleAvatarSuccess(){
-
+        handleAvatarSuccess(res){
+            console.log(res);
+            this.userForm.avatar = res.data.path;
         },
-        beforeAvatarUpload() {
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg';
+            const isLt2M = file.size / 1024 / 1024 < 2;
 
+            if (!isJPG) {
+                this.$message.error('上传头像图片只能是 JPG 格式!');
+            }
+            if (!isLt2M) {
+                this.$message.error('上传头像图片大小不能超过 2MB!');
+            }
+            return isJPG && isLt2M;
         },
         reset() {
             this.$refs.userFormRef.resetFields();
+        },
+        submit() {
+            this.$refs.userFormRef.validate(async valid => {
+                if (valid) {
+                    console.log(this.userForm)
+                    const res = await signup(this.userForm);
+                    console.log(res)
+                    if (res.code !== 200) {
+                        this.$message.error(res.message);
+                    } else {
+                        this.$message.success("注册成功！");
+                        await this.$router.push("/home");
+                    }
+                }
+            })
         }
     }
 }
@@ -119,12 +154,8 @@ export default {
         box-shadow: 0 0 10px #ddd;
         background-color: #fff;
     }
-    .btn{
-        float: right;
-    }
 }
 .el-upload {
-    margin-left: 20%;
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     cursor: pointer;
@@ -146,5 +177,10 @@ export default {
     width: 150px;
     height: 150px;
     display: block;
+}
+.buttons{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
 }
 </style>
