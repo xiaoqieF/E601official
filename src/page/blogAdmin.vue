@@ -36,7 +36,6 @@
             </el-col>
             <!-- 头像 -->
             <el-col :span="4" :offset="2">
-                <!-- <el-avatar style="float:right" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar> -->
                 <div class="header-right">
                     <el-dropdown @command="handleCommand">
                     <span>
@@ -45,7 +44,7 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item command="home">首页</el-dropdown-item>
                             <el-dropdown-item command="modify">修改个人信息</el-dropdown-item>
-                            <el-dropdown-item command="upload">上传头像</el-dropdown-item>
+                            <el-dropdown-item command="upload">修改头像</el-dropdown-item>
                             <el-dropdown-item command="logOut">注销</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -104,11 +103,27 @@
                 <el-button type="primary" @click="modifyUserInfo">确 定</el-button>
             </span>
         </el-dialog>
+
+        <!-- 上传头像对话框 -->
+        <el-dialog
+            title="上传头像"
+            :visible.sync="uploadDialogVisible"
+            width="30%">
+            <el-upload
+                class="el-upload"
+                :action="uploadUrl"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload">
+                <img v-if="userInfo.avatar" :src="userInfo.avatar" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import {getUserByIdPrivate} from "@/utils/api";
+import api, {getUserByIdPrivate} from "@/utils/api";
 import {updateUser} from "@/utils/api";
 
 export default {
@@ -158,6 +173,8 @@ export default {
                     { required: true, message: '请输入个人简介', trigger: 'blur' },
                 ],
             },
+            uploadDialogVisible:false,
+            uploadUrl: api.uploadAvatar,
         }
     },
     methods: {
@@ -169,7 +186,7 @@ export default {
             } else if (command === 'modify') {
                 this.modifyDialogVisible = true;
             } else if (command === 'upload') {
-
+                this.uploadDialogVisible = true;
             } else if (command === "logOut") {
                 window.sessionStorage.clear();
                 this.$message.success("注销成功！");
@@ -183,6 +200,9 @@ export default {
                 const res = await getUserByIdPrivate(userId);
                 console.log(res);
                 this.userInfo = res.data;
+            } else {
+                this.$message.error("请登录");
+                await this.$router.push("/admin");
             }
         },
         // 取消修改个人信息
@@ -190,13 +210,38 @@ export default {
             this.getUserInfo();
             this.$refs.userFormRef.resetFields();
         },
+        // 确认修改用户信息
         modifyUserInfo() {
             this.$refs.userFormRef.validate(async valid => {
                 if (valid) {
                     const res = await updateUser(this.$route.params.id, this.userInfo);
+                    if (res.code === 200) {
+                        this.$message.success("修改成功！");
+                        this.modifyDialogVisible = false;
+                    }
                 }
             })
-        }
+        },
+        async handleAvatarSuccess(res) {
+            console.log(res);
+            this.userInfo.avatar = res.data.path;
+            const data = await updateUser(this.$route.params.id, this.userInfo);
+            if (data.code === 200) {
+                this.$message.success("上传头像成功！");
+            }
+        },
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (!isJPG) {
+                this.$message.error('上传头像图片只能是 JPG 格式!');
+            }
+            if (!isLt2M) {
+                this.$message.error('上传头像图片大小不能超过 2MB!');
+            }
+            return isJPG && isLt2M;
+        },
     },
     // 监听路由路径变化，改变当前导航栏激活项
     watch: {
@@ -271,14 +316,15 @@ export default {
         color: #eee;
     }
 }
-.avatar-uploader .el-upload {
+.el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     cursor: pointer;
-    position: relative;
     overflow: hidden;
+    display: inline-block;
+    margin: 0 auto;
 }
-.avatar-uploader .el-upload:hover {
+.el-upload:hover {
     border-color: #409EFF;
 }
 .avatar-uploader-icon {
