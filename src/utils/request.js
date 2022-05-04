@@ -1,4 +1,5 @@
 import axios from "axios";
+import Vue from "vue";
 const baseUrl = 'http://127.0.0.1:8086/'
 
 const service = axios.create({
@@ -17,6 +18,9 @@ service.interceptors.request.use(config => {
 
 // 相应拦截器
 service.interceptors.response.use(response => {
+    if(response.data.code === 506) {
+        Vue.prototype.$message.error("token超时，请重新登录！");
+    }
     return response.data
 }, error => {
     console.log(error.response)

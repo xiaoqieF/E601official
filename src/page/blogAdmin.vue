@@ -3,7 +3,7 @@
         <el-row class="header">
             <el-col :span="4" class="admin-logo">
                 <div class="logo-content">
-                    后台管理系统
+                    个人中心
                 </div>
             </el-col>
             <!-- 导航栏 -->
@@ -40,7 +40,7 @@
                 <div class="header-right">
                     <el-dropdown @command="handleCommand">
                     <span>
-                        <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+                        <el-avatar :src="userInfo.avatar"></el-avatar>
                     </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item command="home">首页</el-dropdown-item>
@@ -49,7 +49,7 @@
                             <el-dropdown-item command="logOut">注销</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
-                    <div class="welcome-user">欢迎你：小切</div>
+                    <div class="welcome-user">欢迎你：{{userInfo.nickname}}</div>
                 </div>
             </el-col>
         </el-row>
@@ -69,14 +69,53 @@
                 <span>Designed by <a href="#" style="color: #bbb">小切</a></span>
             </div>
         </div>
+
+        <!-- 修改用户信息对话框 -->
+        <el-dialog
+            title="修改个人信息"
+            :visible.sync="modifyDialogVisible"
+            width="50%"
+            @close="handleModifyDialogClose">
+            <el-form :model="userInfo" :rules="userFormRules" ref="userFormRef" label-width="100px">
+                <el-form-item label="用户名" prop="username">
+                    <el-input v-model="userInfo.username" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" prop="password">
+                    <el-input v-model="userInfo.password"></el-input>
+                </el-form-item>
+                <el-form-item label="昵称" prop="nickname">
+                    <el-input v-model="userInfo.nickname"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="userInfo.email"></el-input>
+                </el-form-item>
+                <el-form-item label="座右铭" prop="moto">
+                    <el-input v-model="userInfo.moto"></el-input>
+                </el-form-item>
+                <el-form-item label="网站" prop="site">
+                    <el-input v-model="userInfo.site"></el-input>
+                </el-form-item>
+                <el-form-item label="个人简介" prop="description">
+                    <el-input type="textarea" :rows="3" v-model="userInfo.description"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer">
+                <el-button @click="modifyDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="modifyUserInfo">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
+import {getUserByIdPrivate} from "@/utils/api";
+import {updateUser} from "@/utils/api";
+
 export default {
     name: 'blogAdmin',
     created() {
-        this.activeIndex = this.$route.path
+        this.activeIndex = this.$route.path;
+        this.getUserInfo();
     },
     data() {
         // 自定义邮箱验证规则
@@ -89,14 +128,75 @@ export default {
         };
         return {
             activeIndex: "",
+            // 用户信息
+            userInfo: {
+
+            },
+            // 修改用户信息对话框
+            modifyDialogVisible: false,
+            userFormRules: {
+                username: [
+                    { required: true, message: '请输入用户名', trigger: 'blur' },
+                    { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+                ],
+                nickname: [
+                    { required: true, message: '请输入昵称', trigger: 'blur' },
+                    { min: 1, max: 5, message: '长度在 1 到 5 个字符', trigger: 'blur' }
+                ],
+                password: [
+                    { required: true, message: '请输入密码', trigger: 'blur' },
+                    { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+                ],
+                email: [
+                    { required: true, message: '请输入邮箱', trigger: 'blur' },
+                    {validator: checkEmail, trigger: 'blur'},
+                ],
+                moto: [
+                    { required: true, message: '请输入座右铭', trigger: 'blur' },
+                ],
+                description: [
+                    { required: true, message: '请输入个人简介', trigger: 'blur' },
+                ],
+            },
         }
     },
     methods: {
         // 头像下拉菜单回调
         handleCommand(command) {
             console.log(command)
-        },
+            if (command === 'home') {
+                this.$router.push('/home');
+            } else if (command === 'modify') {
+                this.modifyDialogVisible = true;
+            } else if (command === 'upload') {
 
+            } else if (command === "logOut") {
+                window.sessionStorage.clear();
+                this.$message.success("注销成功！");
+                this.$router.push('/admin');
+            }
+        },
+        // 获取用户信息(包括密码)
+        async getUserInfo() {
+            let userId = window.sessionStorage.getItem("userId");
+            if (userId !== null) {
+                const res = await getUserByIdPrivate(userId);
+                console.log(res);
+                this.userInfo = res.data;
+            }
+        },
+        // 取消修改个人信息
+        handleModifyDialogClose() {
+            this.getUserInfo();
+            this.$refs.userFormRef.resetFields();
+        },
+        modifyUserInfo() {
+            this.$refs.userFormRef.validate(async valid => {
+                if (valid) {
+                    const res = await updateUser(this.$route.params.id, this.userInfo);
+                }
+            })
+        }
     },
     // 监听路由路径变化，改变当前导航栏激活项
     watch: {

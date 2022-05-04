@@ -75,6 +75,7 @@ export default {
 
                     // 登录成功时保存服务端下发的token
                     window.sessionStorage.setItem('token', res.data.token)
+                    window.sessionStorage.setItem('userId', res.data.user.id);
                     await this.$router.push("/home");
                 }
             })

@@ -14,7 +14,20 @@
                     </div>
                 </el-col>
                 <el-col :span="4">
-                    <div class="login">
+                    <div v-if="userInfo.id" class="header-right">
+                        <el-dropdown @command="handleCommand">
+                            <span>
+                                <el-avatar :src="userInfo.avatar"></el-avatar>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="home">首页</el-dropdown-item>
+                                <el-dropdown-item command="center">个人中心</el-dropdown-item>
+                                <el-dropdown-item command="logOut">注销</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <div class="welcome-user">欢迎你：{{ userInfo.nickname }}</div>
+                    </div>
+                    <div v-else class="login">
                         <router-link to="/admin">登录</router-link>
                         <span>|</span>
                         <router-link to="/signUp">注册</router-link>
@@ -51,8 +64,13 @@
 </template>
 
 <script>
+import {getUserById} from "@/utils/api";
+
 export default {
     name: 'index',
+    created() {
+        this.getUserInfo();
+    },
     mounted() {
         window.addEventListener('scroll', this.scrollHandler)
         this.lastHeight = window.scrollY
@@ -65,6 +83,9 @@ export default {
             navClass: 'header-nav-top',
             // 滚动页面所处高度
             lastHeight: 0,
+            userInfo :{
+                id: ""
+            }
         }
     },
     methods: {
@@ -82,6 +103,25 @@ export default {
             }
             this.lastHeight = height
         },
+        async getUserInfo() {
+            let userId = window.sessionStorage.getItem("userId");
+            if (userId !== null) {
+                const res = await getUserById(userId);
+                console.log(res);
+                this.userInfo = res.data;
+            }
+        },
+        handleCommand(command) {
+            if (command === "home") {
+                this.$router.push("/home");
+            } else if (command === "center") {
+                this.$router.push(`/admin/${this.userInfo.id}/manage`);
+            } else if (command === "logOut") {
+                window.sessionStorage.clear();
+                this.$message.success("注销成功！");
+                this.$router.push('/admin');
+            }
+        }
     }
 }
 </script>
@@ -132,12 +172,12 @@ export default {
 }
 
 .header-nav-down{
-    background-color: #333;
+    background-color: #666;
     transform: translateY(-100%);
 }
 .header-nav-up{
     transform: translateY(0);
-    background-color: #333;
+    background-color: #666;
 }
 
 .footer{
@@ -164,6 +204,19 @@ export default {
         font-size: 16px;
         font-weight: bold;
         margin-bottom: 5px;
+    }
+}
+
+.header-right{
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .welcome-user{
+        margin-left: 20px;
+        font-size: 16px;
+        padding-top: 5px;
+        color: #eee;
     }
 }
 </style>
