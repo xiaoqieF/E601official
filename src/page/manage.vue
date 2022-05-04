@@ -125,11 +125,15 @@
 import {getCateByUserId} from "@/utils/api";
 import {addCate} from "@/utils/api";
 import {deleteCate} from "@/utils/api";
+import {getTagsByUserId} from "@/utils/api";
+import {addTag} from "@/utils/api";
+import {deleteTag} from "@/utils/api";
 
 export default {
     name: 'manage',
     created() {
         this.getAllCate();
+        this.getAllTags();
     },
     data() {
         return {
@@ -152,10 +156,17 @@ export default {
         }
     },
     methods: {
+        // 获取全部分类标签
         async getAllCate() {
             const res = await getCateByUserId(this.$route.params.id);
             console.log(res);
             this.cateList = res.data;
+        },
+        // 获取全部标签
+        async getAllTags() {
+            const res = await getTagsByUserId(this.$route.params.id);
+            console.log(res);
+            this.tagList = res.data;
         },
         // 添加分类框确认回调
         async handleCateInputConfirm() {
@@ -190,7 +201,7 @@ export default {
                 this.$message.error(res.message);
                 return;
             }
-            this.$message("删除分类成功！");
+            this.$message.success("删除分类成功！");
             await this.getAllCate();
         },
         // 添加标签框确认回调
@@ -200,7 +211,13 @@ export default {
                 this.tagInputVisible = false;
                 return;
             }
-
+            const res = await addTag(this.$route.params.id, this.tagInputValue);
+            console.log(res);
+            if (res.code !== 200) {
+                this.$message.error(res.message);
+                return;
+            }
+            await this.getAllTags();
             this.tagInputVisible = false;
             this.tagInputValue = '';
         },
@@ -213,8 +230,15 @@ export default {
         },
         // 删除标签回调
         async handleTagClose(tagId) {
-            console.log("cateId:", tagId);
-
+            console.log("tagId:", tagId);
+            const res = await deleteTag(tagId);
+            console.log(res);
+            if (res.code !== 200) {
+                this.$message.error(res.message);
+                return;
+            }
+            this.$message.success("删除标签成功！");
+            await this.getAllTags();
         },
         // 分页页面大小变化后重新获取数据
         handleSizeChange(newSize) {

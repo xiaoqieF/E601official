@@ -9,7 +9,10 @@ const api = {
     updateUser: `private/user/`,
     getCateByUserId: `public/categories/`,
     addCate: `private/categories/`,
-    deleteCate: `private/categories/`
+    deleteCate: `private/categories/`,
+    getTagsByUserId: `public/tags/`,
+    addTag: `private/tags/`,
+    deleteTag: `private/tags/`,
 }
 
 export default api
@@ -80,6 +83,33 @@ export function addCate(userId, cateName) {
 export function deleteCate(cateId) {
     return axios({
         url: api.deleteCate + cateId,
+        method: 'delete',
+    })
+}
+
+// 获取某个用户的所有分类
+export function getTagsByUserId(userId) {
+    return axios({
+        url: api.getTagsByUserId + userId,
+        method: 'get'
+    })
+}
+
+// 添加分类
+export function addTag(userId, tagName) {
+    return axios({
+        url: api.addTag + userId,
+        method: 'post',
+        data: {
+            name: tagName
+        }
+    })
+}
+
+// 删除分类
+export function deleteTag(tagId) {
+    return axios({
+        url: api.deleteTag + tagId,
         method: 'delete',
     })
 }
