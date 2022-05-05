@@ -11,14 +11,23 @@
             <el-table-column type="index" width="50"></el-table-column>
             <el-table-column prop="title" label="标题"></el-table-column>
             <el-table-column label="创建时间" width="120px">
+                <template v-slot="scope">
+                    {{scope.row.createTime | dateFormat}}
+                </template>
             </el-table-column>
             <el-table-column label="更新时间" width="120px">
+                <template v-slot="scope">
+                    {{scope.row.updateTime | dateFormat}}
+                </template>
             </el-table-column>
             <el-table-column prop="user.nickname" label="作者" width="60px"></el-table-column>
             <el-table-column label="分类" width="80px">
+                <template v-slot="scope">
+                    <el-tag size="small">{{ scope.row.type.name }}</el-tag>
+                </template>
             </el-table-column>
             <el-table-column label="标签" width="250px">
-                <template slot-scope="scope">
+                <template v-slot="scope">
                     <el-tag
                         type="success"
                         size="small"
@@ -128,12 +137,14 @@ import {deleteCate} from "@/utils/api";
 import {getTagsByUserId} from "@/utils/api";
 import {addTag} from "@/utils/api";
 import {deleteTag} from "@/utils/api";
+import {getBlogsByUserId} from "@/utils/api";
 
 export default {
     name: 'manage',
     created() {
         this.getAllCate();
         this.getAllTags();
+        this.getAllBlogs();
     },
     data() {
         return {
@@ -239,6 +250,17 @@ export default {
             }
             this.$message.success("删除标签成功！");
             await this.getAllTags();
+        },
+
+        async getAllBlogs() {
+            const res = await getBlogsByUserId(this.$route.params.id, this.blogQuery);
+            console.log(res);
+            if (res.code === 200) {
+                this.blogList = res.data.blogList;
+                this.totalBlogs = res.data.total;
+            } else {
+                this.$message.error(res.message);
+            }
         },
         // 分页页面大小变化后重新获取数据
         handleSizeChange(newSize) {

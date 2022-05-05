@@ -40,6 +40,12 @@ Vue.prototype.$formula = function (dom) {
 import element from './element'
 Vue.use(element)
 
+import dayjs from 'dayjs'
+// 注册全局时间格式化过滤器
+Vue.filter('dateFormat', function(originTime, format='YYYY年MM月DD日 HH:mm:ss'){
+  return dayjs(originTime).format(format);
+})
+
 new Vue({
   render: h => h(App),
   router,

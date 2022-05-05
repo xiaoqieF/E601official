@@ -13,6 +13,7 @@ const api = {
     getTagsByUserId: `public/tags/`,
     addTag: `private/tags/`,
     deleteTag: `private/tags/`,
+    getBlogsByUserId: `private/blog/`,
 }
 
 export default api
@@ -87,7 +88,7 @@ export function deleteCate(cateId) {
     })
 }
 
-// 获取某个用户的所有分类
+// 获取某个用户的所有标签
 export function getTagsByUserId(userId) {
     return axios({
         url: api.getTagsByUserId + userId,
@@ -95,7 +96,7 @@ export function getTagsByUserId(userId) {
     })
 }
 
-// 添加分类
+// 添加标签
 export function addTag(userId, tagName) {
     return axios({
         url: api.addTag + userId,
@@ -106,10 +107,19 @@ export function addTag(userId, tagName) {
     })
 }
 
-// 删除分类
+// 删除标签
 export function deleteTag(tagId) {
     return axios({
         url: api.deleteTag + tagId,
         method: 'delete',
+    })
+}
+
+// 获取用户的所有博客
+export function getBlogsByUserId(userId, queryInfo) {
+    return axios({
+        url: api.getBlogsByUserId + userId,
+        method: 'get',
+        params: queryInfo
     })
 }
