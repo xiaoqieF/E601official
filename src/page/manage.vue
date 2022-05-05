@@ -39,7 +39,7 @@
                 </template>
             </el-table-column>
             <el-table-column label="是否发表">
-                <template slot-scope="scope">
+                <template v-slot="scope">
                     <el-tag v-if="scope.row.published" size="small" type="success">是</el-tag>
                     <el-tag v-else size="small" type="danger">否</el-tag>
                 </template>
@@ -47,7 +47,7 @@
             <!-- 编辑和删除博客操作栏 -->
             <el-table-column label="操作" width="140px">
                 <!-- 通过作用域插槽获取组件内部数据 -->
-                <template slot-scope="scope">
+                <template v-slot="scope">
                     <!-- 修改、删除和分配角色按钮 -->
                     <el-button type="primary" icon="el-icon-edit" size="mini"
                                @click="editBlog(scope.row.id)"></el-button>

@@ -65,18 +65,22 @@
         <!-- 上传文章首页图 -->
         <el-upload
             class="upload-first-picture"
+            ref="upload"
             :action="uploadUrl"
+            :on-success="handleSuccess"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
-            :on-success="handleSuccess"
             :file-list="fileList"
             :headers="uploadHeader"
+            :multiple="false"
+            :limit="1"
+            :on-exceed="handleExceed"
             list-type="picture">
             <el-button size="small" type="primary">点击上传文章首图</el-button>
         </el-upload>
         <div class="form-confirm">
-            <el-button type="primary" size="small" >保存</el-button>
-            <el-button type="primary" size="small" >发布</el-button>
+            <el-button type="primary" size="small" @click="saveBlog">保存</el-button>
+            <el-button type="primary" size="small" @click="submitBlog">发布</el-button>
         </div>
 
         <!-- 预览图片对话框 -->
@@ -90,9 +94,16 @@
 </template>
 
 <script>
+import {getCateByUserId, getTagsByUserId} from "@/utils/api";
+import api from "@/utils/api";
+import {addBlog} from "@/utils/api";
+import {removeFirstPicture} from "@/utils/api";
+
 export default {
     name: 'publish',
     created() {
+        this.getAllCate();
+        this.getAllTags();
     },
     data() {
         return {
@@ -112,12 +123,11 @@ export default {
                 published: false,
             },
             fileList:[],
-            // 文件上传地址
-            // uploadUrl: this.$http.defaults.baseURL + 'private/blog/upload',
             // 上传文件时的头部
             uploadHeader: {
                 Authorization: window.sessionStorage.getItem('token')
             },
+            uploadUrl: api.uploadFirstPicture,
             // 分类列表数据
             cateList: [],
             // 标签列表数据
@@ -141,23 +151,61 @@ export default {
                 ],
             },
             previewDialogVisible: false,
-
         }
     },
     methods: {
-        handleRemove(file, fileList){
-            console.log(file, fileList)
-            this.blog.firstPicture = ''
+        handleExceed() {
+            this.$message.error("只能上传一张首页图片！替换请删除之前上传的图片");
         },
-        handleSuccess(response, file) {
-            console.log(response)
-            this.blog.firstPicture = response.path
+        handleSuccess(res) {
+            console.log(res);
+            this.blog.firstPicture = res.data.path;
+            this.$message.success("上传成功！");
         },
-        handlePreview(file) {
-            console.log(file)
+        handlePreview() {
             this.previewDialogVisible = true;
         },
-
+        handleRemove(file) {
+            const res = removeFirstPicture(file.response.data.relativePath);
+            console.log(res);
+        },
+        // 获取全部分类标签
+        async getAllCate() {
+            const res = await getCateByUserId(this.$route.params.id);
+            console.log(res);
+            this.cateList = res.data;
+        },
+        // 获取全部标签
+        async getAllTags() {
+            const res = await getTagsByUserId(this.$route.params.id);
+            console.log(res);
+            this.tagList = res.data;
+        },
+        // 保存博客
+        saveBlog() {
+            this.$refs.blogFormRef.validate(async valid => {
+                if (valid) {
+                    const res = await addBlog(this.blog);
+                    if (res.code === 200) {
+                        this.$message.success("保存成功！");
+                        await this.$router.push(`/admin/${this.$route.params.id}/manage`);
+                    }
+                }
+            })
+        },
+        // 发布博客
+        submitBlog() {
+            this.blog.published = true;
+            this.$refs.blogFormRef.validate(async valid => {
+                if (valid) {
+                    const res = await addBlog(this.blog);
+                    if (res.code === 200) {
+                        this.$message.success("发布成功！");
+                        await this.$router.push(`/admin/${this.$route.params.id}/manage`);
+                    }
+                }
+            })
+        },
     }
 }
 </script>

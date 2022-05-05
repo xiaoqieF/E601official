@@ -14,6 +14,9 @@ const api = {
     addTag: `private/tags/`,
     deleteTag: `private/tags/`,
     getBlogsByUserId: `private/blog/`,
+    uploadFirstPicture: axios.defaults.baseURL + 'private/blog/firstPicture',
+    removeFirstPicture: 'private/blog/firstPicture/',
+    addBlog: 'private/blog'
 }
 
 export default api
@@ -121,5 +124,22 @@ export function getBlogsByUserId(userId, queryInfo) {
         url: api.getBlogsByUserId + userId,
         method: 'get',
         params: queryInfo
+    })
+}
+
+// 删除文章首图
+export function removeFirstPicture(relativePath) {
+    return axios({
+        url: api.removeFirstPicture + relativePath,
+        method: 'delete',
+    })
+}
+
+// 添加博客
+export function addBlog(blog) {
+    return axios({
+        url: api.addBlog,
+        method: 'post',
+        data: blog
     })
 }
