@@ -12,6 +12,7 @@ const publish = () => import('../page/publish')
 const album = () => import('../page/album')
 const manage = () => import('../page/manage')
 const signUp = () => import('../page/signUp')
+const edit = () => import('../page/edit')
 
 
 Vue.use(VueRouter)
@@ -72,9 +73,23 @@ const router = new VueRouter({
                     component: manage,
                     meta: 'needAuth'
                 },
+                {
+                    path: 'edit/:blogId',
+                    component: edit,
+                    meta: 'needAuth'
+                }
             ]
         }
     ]
+})
+
+// 路由守卫
+router.beforeEach((to, from, next) => {
+    if (to.meta === 'needAuth' && !window.sessionStorage.getItem('token')) {
+        return next('/admin')
+    } else {
+        return next()
+    }
 })
 
 export default router

@@ -138,6 +138,7 @@ import {getTagsByUserId} from "@/utils/api";
 import {addTag} from "@/utils/api";
 import {deleteTag} from "@/utils/api";
 import {getBlogsByUserId} from "@/utils/api";
+import {deleteBlog} from "@/utils/api";
 
 export default {
     name: 'manage',
@@ -265,18 +266,35 @@ export default {
         // 分页页面大小变化后重新获取数据
         handleSizeChange(newSize) {
             this.blogQuery.pageSize = newSize;
+            this.getAllBlogs();
         },
         // 当前选择页面变化后重新获取数据
         handleCurrentChange(newPage) {
             this.blogQuery.pageNum = newPage;
+            this.getAllBlogs();
         },
         // 删除博客
         async deleteBlog(id) {
             console.log(id);
-
+            const result = await this.$confirm('此操作将永久删除该博客 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).catch(err => err);
+            if (result !== 'confirm') {
+                return this.$message.info('已取消删除操作！');
+            }
+            const res = await deleteBlog(id);
+            console.log(res);
+            if (res.code === 200) {
+                this.$message.success("删除成功！");
+                await this.getAllBlogs();
+            }
         },
+        // 编辑博客，路由至编辑页面
         editBlog(id) {
             console.log(id);
+            this.$router.push(`/admin/${this.$route.params.id}/edit/${id}`);
         }
     },
 }

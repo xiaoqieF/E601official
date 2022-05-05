@@ -13,10 +13,13 @@ const api = {
     getTagsByUserId: `public/tags/`,
     addTag: `private/tags/`,
     deleteTag: `private/tags/`,
-    getBlogsByUserId: `private/blog/`,
+    getBlogsByUserId: `private/allBlogs/`,
     uploadFirstPicture: axios.defaults.baseURL + 'private/blog/firstPicture',
     removeFirstPicture: 'private/blog/firstPicture/',
-    addBlog: 'private/blog'
+    addBlog: 'private/blog',
+    deleteBlog: `private/blog/`,
+    getRawBlogById: `private/blog/`,
+    updateBlog:'private/blog',
 }
 
 export default api
@@ -140,6 +143,31 @@ export function addBlog(blog) {
     return axios({
         url: api.addBlog,
         method: 'post',
+        data: blog
+    })
+}
+
+// 删除博客
+export function deleteBlog(blogId) {
+    return axios({
+        url: api.deleteBlog + blogId,
+        method: 'delete',
+    })
+}
+
+// 根据博客id获取博客内容
+export function getRawBlogById(blogId) {
+    return axios({
+        url: api.getRawBlogById + blogId,
+        method: 'get'
+    })
+}
+
+// 更新博客
+export function updateBlog(blog) {
+    return axios({
+        url: api.updateBlog,
+        method: 'put',
         data: blog
     })
 }
