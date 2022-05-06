@@ -15,7 +15,7 @@
                 </el-col>
                 <el-col :span="4">
                     <div v-if="userInfo.id" class="header-right">
-                        <el-dropdown @command="handleCommand">
+                        <el-dropdown @command="handleCommand" style="cursor: pointer">
                             <span>
                                 <el-avatar :src="userInfo.avatar"></el-avatar>
                             </span>

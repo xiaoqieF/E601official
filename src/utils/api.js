@@ -20,6 +20,10 @@ const api = {
     deleteBlog: `private/blog/`,
     getRawBlogById: `private/blog/`,
     updateBlog:'private/blog',
+    uploadPicture:axios.defaults.baseURL + 'private/album/picture/',
+    removePicture:'/private/album/picture/',
+    addAlbum: 'private/album',
+
 }
 
 export default api
@@ -169,5 +173,22 @@ export function updateBlog(blog) {
         url: api.updateBlog,
         method: 'put',
         data: blog
+    })
+}
+
+// 添加相册
+export function addAlbum(album) {
+    return axios({
+        url: api.addAlbum,
+        method: 'post',
+        data: album
+    })
+}
+
+// 删除图片
+export function removePicture(userId, fileName) {
+    return axios({
+        url: api.removePicture + userId + "/" +fileName,
+        method: 'delete',
     })
 }

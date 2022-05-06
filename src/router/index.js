@@ -13,6 +13,7 @@ const album = () => import('../page/album')
 const manage = () => import('../page/manage')
 const signUp = () => import('../page/signUp')
 const edit = () => import('../page/edit')
+const newAlbum = () => import('../page/newAlbum')
 
 
 Vue.use(VueRouter)
@@ -77,7 +78,12 @@ const router = new VueRouter({
                     path: 'edit/:blogId',
                     component: edit,
                     meta: 'needAuth'
-                }
+                },
+                {
+                    path: 'newAlbum',
+                    component: newAlbum,
+                    meta: 'needAuth'
+                },
             ]
         }
     ]

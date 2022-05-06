@@ -8,7 +8,7 @@
             </div>
             <el-divider></el-divider>
             <el-empty v-if="false" description="你好像还没有任何相册哦，赶快取创建一个吧！">
-                <el-button type="primary">创建相册<i class="el-icon-upload el-icon--right"></i></el-button>
+                <el-button type="primary" @click="toNewAlbum">创建相册<i class="el-icon-upload el-icon--right"></i></el-button>
             </el-empty>
             <div v-else class="album-list">
                 <albumItemAdmin/>
@@ -16,7 +16,7 @@
                 <albumItemAdmin/>
                 <albumItemAdmin/>
                 <albumItemAdmin/>
-                <el-button style="margin: 10px 2px; width: 24%">新建相册<i class="el-icon-upload el-icon--right"></i></el-button>
+                <el-button @click="toNewAlbum" style="margin: 10px 2px; width: 24%">新建相册<i class="el-icon-upload el-icon--right"></i></el-button>
             </div>
 
             <div class="title">相册内容</div>
@@ -34,6 +34,7 @@
                 </div>
             </div>
         </el-card>
+
     </div>
 </template>
 
@@ -46,8 +47,13 @@ export default {
         return {
             url: 'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
             url1: 'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg',
-            url2: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg'
+            url2: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
         }
+    },
+    methods: {
+        toNewAlbum() {
+            this.$router.push(`/admin/${this.$route.params.id}/newAlbum`);
+        },
     }
 }
 </script>

@@ -37,7 +37,7 @@
             <!-- 头像 -->
             <el-col :span="4" :offset="2">
                 <div class="header-right">
-                    <el-dropdown @command="handleCommand">
+                    <el-dropdown @command="handleCommand" style="cursor: pointer">
                     <span>
                         <el-avatar :src="userInfo.avatar"></el-avatar>
                     </span>
