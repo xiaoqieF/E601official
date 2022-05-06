@@ -3,8 +3,13 @@
         <el-card>
             <div>
                 <span class="title">我的相册</span>
-                <el-button @click="toNewAlbum" type="primary" size="small" style="margin-left: 20px">新建相册<i class=" el-icon-edit"></i></el-button>
-                <el-button type="primary" size="small">上传照片<i class="el-icon-upload el-icon--right"></i></el-button>
+                <el-button @click="toNewAlbum" type="primary" size="small" style="margin-left: 20px">新建相册<i class="el-icon-plus el-icon--right"></i></el-button>
+                <el-tooltip effect="dark" content="编辑当前选中的相册">
+                    <el-button @click="editAlbum" type="primary" size="small">编辑相册<i class="el-icon-edit el-icon--right"></i></el-button>
+                </el-tooltip>
+                <el-tooltip effect="dark" content="删除当前选中的相册">
+                    <el-button @click="removeAlbum" type="danger" size="small">删除相册<i class="el-icon-delete el-icon--right"></i></el-button>
+                </el-tooltip>
             </div>
             <el-divider></el-divider>
             <el-empty v-if="false" description="你好像还没有任何相册哦，赶快取创建一个吧！">
@@ -26,6 +31,7 @@
                     <el-image
                         fit="contain"
                         :src="item"
+                        lazy
                         :preview-src-list="[item]">
                     </el-image>
                 </div>
@@ -38,6 +44,7 @@
 <script>
 import albumItemAdmin from "@/components/albumItemAdmin";
 import {getAlbums} from "@/utils/api";
+import {deleteAlbum} from "@/utils/api";
 
 export default {
     name: "album",
@@ -63,10 +70,36 @@ export default {
             console.log(res);
             this.albumList = res.data;
         },
+        // 相册点击回调函数
         handleClick(index) {
             console.log(index);
             this.activeAlbum = index;
-        }
+        },
+        editAlbum() {
+
+        },
+        // 删除相册
+        async removeAlbum() {
+            if (this.activeAlbum === -1) {
+                this.$message.error("请先选择要删除的相册！");
+                return;
+            }
+            const result = await this.$confirm('此操作将永久删除该相册 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).catch(err => err);
+            if (result !== 'confirm') {
+                return this.$message.info('已取消删除操作！');
+            }
+            const res = await deleteAlbum(this.albumList[this.activeAlbum].id);
+            console.log(res);
+            if (res.code === 200) {
+                return this.$message.success("删除相册成功！");
+                await this.getAllAlbums();
+            }
+            this.$message.error(res.message);
+        },
     },
     computed: {
         activeUrls() {
@@ -94,8 +127,8 @@ export default {
         flex-wrap: wrap;
     }
     .picture-item{
-        width: 20%;
-        margin: 5px;
+        width: 40%;
+        margin: 20px;
     }
 }
 </style>
