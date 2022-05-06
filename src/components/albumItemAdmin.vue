@@ -1,22 +1,24 @@
 <template>
-    <div class="album-item">
-        <el-image :src="url"></el-image>
+    <div class="album-item" :class="highlight ? 'blue-border' : ''">
+        <div class="cover">
+            <el-image :src="url" fit="cover"></el-image>
+        </div>
         <div class="album-title">
-            喀纳斯秋绪
+            {{albumInfo.title}}
         </div>
         <div class="device">
-            <span>设备：</span> <span>Mavic Air2</span>
+            <span>设备：</span> <span>{{albumInfo.device}}</span>
         </div>
         <div class="views">
-            <i class="iconfont icon-icon-test" style="color: #444"> 99 </i>
-            <i class="iconfont icon-icon-test1 like">88</i>
+            <i class="iconfont icon-icon-test" style="color: #444"> {{ albumInfo.views }} </i>
+            <i class="iconfont icon-icon-test1 like">{{ albumInfo.like }}</i>
         </div>
         <div class="album-author">
             <div>
-                创建时间：<span class="album-time"> 2022-04-26</span>
+                创建：<span class="album-time"> {{albumInfo.createTime | dateFormat2}}</span>
             </div>
             <div>
-                修改时间：<span class="album-time"> 2022-04-26</span>
+                修改：<span class="album-time"> {{albumInfo.updateTime | dateFormat2}}</span>
             </div>
         </div>
     </div>
@@ -25,25 +27,38 @@
 <script>
 export default {
     name: "albumItemAdmin",
+    props: ["albumInfo", "highlight"],
     data() {
         return {
-            url: "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
+            url: this.albumInfo.urls.split(' ')[0],
         }
     }
 }
 </script>
 
 <style lang="less" scoped>
+.cover{
+    height: 200px;
+    overflow: hidden;
+}
+.el-image{
+    width: 100%;
+    height: 100%;
+}
+.blue-border{
+    border: 2px solid #409eff !important;
+}
 .album-item{
     margin: 10px 2px;
-    width: 23%;
+    width: 22%;
     font-size: 14px;
     line-height: 1.6;
-    padding: 5px;
+    padding: 10px;
     border-radius: 0.2rem;
-    border: 2px solid #409eff;
+    border: 2px solid #eee;
     cursor: pointer;
     .album-title{
+        margin-top: 10px;
         font-weight: 600;
     }
     .views{

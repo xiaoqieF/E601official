@@ -3,7 +3,7 @@
         <el-card>
             <div>
                 <span class="title">我的相册</span>
-                <el-button type="primary" size="small" style="margin-left: 20px">编辑相册<i class=" el-icon-edit"></i></el-button>
+                <el-button @click="toNewAlbum" type="primary" size="small" style="margin-left: 20px">新建相册<i class=" el-icon-edit"></i></el-button>
                 <el-button type="primary" size="small">上传照片<i class="el-icon-upload el-icon--right"></i></el-button>
             </div>
             <el-divider></el-divider>
@@ -11,26 +11,23 @@
                 <el-button type="primary" @click="toNewAlbum">创建相册<i class="el-icon-upload el-icon--right"></i></el-button>
             </el-empty>
             <div v-else class="album-list">
-                <albumItemAdmin/>
-                <albumItemAdmin/>
-                <albumItemAdmin/>
-                <albumItemAdmin/>
-                <albumItemAdmin/>
-                <el-button @click="toNewAlbum" style="margin: 10px 2px; width: 24%">新建相册<i class="el-icon-upload el-icon--right"></i></el-button>
+                <albumItemAdmin
+                    v-for="(item, index) in this.albumList"
+                    :albumInfo="item"
+                    :highlight="activeAlbum === index"
+                    @click.native="handleClick(index)" />
             </div>
 
             <div class="title">相册内容</div>
             <el-divider></el-divider>
-            <el-empty v-if="false" description="选中一个相册，查看内容！"></el-empty>
+            <el-empty v-if="activeAlbum === -1" description="选中一个相册，查看内容！"></el-empty>
             <div v-else class="picture-list">
-                <div class="picture-item">
-                    <el-image fit="contain" :src="url" :preview-src-list="[url]"></el-image>
-                </div>
-                <div class="picture-item">
-                    <el-image fit="contain" :src="url2" :preview-src-list="[url2]"></el-image>
-                </div>
-                <div class="picture-item">
-                    <el-image fit="contain" :src="url1" :preview-src-list="[url1]"></el-image>
+                <div class="picture-item" v-for="item in this.activeUrls">
+                    <el-image
+                        fit="contain"
+                        :src="item"
+                        :preview-src-list="[item]">
+                    </el-image>
                 </div>
             </div>
         </el-card>
@@ -40,20 +37,44 @@
 
 <script>
 import albumItemAdmin from "@/components/albumItemAdmin";
+import {getAlbums} from "@/utils/api";
+
 export default {
     name: "album",
     components: {albumItemAdmin},
+    created() {
+        this.getAllAlbums();
+    },
     data() {
         return {
             url: 'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
-            url1: 'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg',
-            url2: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
+            albumList: [],
+            activeAlbum: -1,
+
         }
     },
     methods: {
         toNewAlbum() {
             this.$router.push(`/admin/${this.$route.params.id}/newAlbum`);
         },
+        // 获取所有相册
+        async getAllAlbums() {
+            const res = await getAlbums(this.$route.params.id);
+            console.log(res);
+            this.albumList = res.data;
+        },
+        handleClick(index) {
+            console.log(index);
+            this.activeAlbum = index;
+        }
+    },
+    computed: {
+        activeUrls() {
+            if (this.activeAlbum !== -1) {
+                console.log(this.albumList[this.activeAlbum])
+                return this.albumList[this.activeAlbum].urls.split(' ');
+            }
+        }
     }
 }
 </script>

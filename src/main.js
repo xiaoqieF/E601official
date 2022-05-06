@@ -46,6 +46,10 @@ Vue.filter('dateFormat', function(originTime, format='YYYY年MM月DD日 HH:mm:ss
   return dayjs(originTime).format(format);
 })
 
+Vue.filter('dateFormat2', function(originTime, format='YYYY-MM-DD'){
+  return dayjs(originTime).format(format);
+})
+
 new Vue({
   render: h => h(App),
   router,

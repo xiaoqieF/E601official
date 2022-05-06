@@ -108,7 +108,7 @@ export default {
             if (res.code === 200) {
                 this.albumForm.urls.push(res.data.path);
             }
-        }
+        },
     },
     async beforeRouteLeave(to, from, next) {
         console.log(this.albumForm.urls);
