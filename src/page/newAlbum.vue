@@ -43,6 +43,14 @@ import {addAlbum} from "@/utils/api";
 
 export default {
     name: "newAlbum",
+    mounted() {
+        if (window.history && window.history.pushState) {
+            window.addEventListener('beforeunload', this.beforeUnloadFn );
+        }
+    },
+    destroyed() {
+        window.removeEventListener('beforeunload', this.beforeUnloadFn );
+    },
     data() {
         return {
             albumForm: {
@@ -108,25 +116,31 @@ export default {
                 this.albumForm.urls.push(res.data.path);
             }
         },
-    },
-    async beforeRouteLeave(to, from, next) {
-        console.log(this.albumForm.urls);
-        if (this.albumForm.urls.length !== 0) {
-            const result = await this.$confirm('您上传的照片将丢失 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).catch(err => err);
-            if (result !== 'confirm') {
-                return this.$message.info('已取消！');
-            }
+        // 用户刷新浏览器，相当于不保存修改，同样需要删除已经上传的照片
+        beforeUnloadFn() {
+            // 用户放弃更改，将上传的图像删除
             this.albumForm.urls.forEach(url => {
                 let path = url.split('/').pop();
                 removePicture(this.$route.params.id, path);
             })
-            next();
         }
-        next();
+    },
+    async beforeRouteLeave(to, from, next) {
+        console.log(this.albumForm.urls);
+        // 用户上传了照片后想要离开
+        if (this.albumForm.urls.length !== 0) {
+            const answer = window.confirm('修改将不会生效 是否继续？');
+            if (!answer) {
+                next(false);
+            } else {
+                // 用户放弃更改，将上传的图像删除
+                this.albumForm.urls.forEach(url => {
+                    let path = url.split('/').pop();
+                    removePicture(this.$route.params.id, path);
+                })
+                next(true);
+            }
+        }
     }
 }
 </script>
