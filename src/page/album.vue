@@ -44,7 +44,7 @@
 
 <script>
 import albumItemAdmin from "@/components/albumItemAdmin";
-import {getAlbums} from "@/utils/api";
+import {getAlbums, removePicture} from "@/utils/api";
 import {deleteAlbum} from "@/utils/api";
 
 export default {
@@ -97,6 +97,9 @@ export default {
             if (result !== 'confirm') {
                 return this.$message.info('已取消删除操作！');
             }
+            this.activeUrls.forEach(url => {
+                removePicture(this.$route.params.id, url.split('/').pop());
+            })
             const res = await deleteAlbum(this.albumList[this.activeAlbum].id);
             console.log(res);
             if (res.code === 200) {

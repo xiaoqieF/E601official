@@ -141,6 +141,7 @@ export default {
                 next(true);
             }
         }
+        next(true);
     }
 }
 </script>
