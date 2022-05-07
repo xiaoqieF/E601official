@@ -3,6 +3,7 @@
         <el-card>
             <div>
                 <span class="title">我的相册</span>
+                <span style="font-size: 12px">  (点击以选择相册)</span>
                 <el-button @click="toNewAlbum" type="primary" size="small" style="margin-left: 20px">新建相册<i class="el-icon-plus el-icon--right"></i></el-button>
                 <el-tooltip effect="dark" content="编辑当前选中的相册">
                     <el-button @click="editAlbum" type="primary" size="small">编辑相册<i class="el-icon-edit el-icon--right"></i></el-button>
@@ -12,7 +13,7 @@
                 </el-tooltip>
             </div>
             <el-divider></el-divider>
-            <el-empty v-if="false" description="你好像还没有任何相册哦，赶快取创建一个吧！">
+            <el-empty v-if="albumList.length === 0" description="你好像还没有任何相册哦，赶快取创建一个吧！">
                 <el-button type="primary" @click="toNewAlbum">创建相册<i class="el-icon-upload el-icon--right"></i></el-button>
             </el-empty>
             <div v-else class="album-list">
@@ -76,7 +77,11 @@ export default {
             this.activeAlbum = index;
         },
         editAlbum() {
-
+            if (this.activeAlbum === -1) {
+                this.$message.error("请先选择要编辑的相册！");
+                return;
+            }
+            this.$router.push(`/admin/${this.$route.params.id}/editAlbum/${this.albumList[this.activeAlbum].id}`)
         },
         // 删除相册
         async removeAlbum() {
@@ -95,8 +100,9 @@ export default {
             const res = await deleteAlbum(this.albumList[this.activeAlbum].id);
             console.log(res);
             if (res.code === 200) {
-                return this.$message.success("删除相册成功！");
+                this.$message.success("删除相册成功！");
                 await this.getAllAlbums();
+                return;
             }
             this.$message.error(res.message);
         },

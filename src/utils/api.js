@@ -23,8 +23,10 @@ const api = {
     uploadPicture:axios.defaults.baseURL + 'private/album/picture/',
     removePicture:'/private/album/picture/',
     addAlbum: 'private/album',
-    getAlbums: 'private/album/',
+    getAlbums: 'private/allAlbums/',
     deleteAlbum: 'private/album/',
+    getAlbumById: 'private/album/',
+    updateAlbum: 'private/album',
 }
 
 export default api
@@ -207,5 +209,22 @@ export function deleteAlbum(albumId) {
     return axios({
         url: api.deleteAlbum + albumId,
         method: 'delete'
+    })
+}
+
+// 根据相册id获取相册
+export function getAlbumById(albumId) {
+    return axios({
+        url: api.getAlbumById + albumId,
+        method: 'get'
+    })
+}
+
+// 更新相册
+export function updateAlbum(album) {
+    return axios({
+        url: api.updateAlbum,
+        method: 'put',
+        data: album
     })
 }

@@ -63,7 +63,6 @@ export default {
                     { required: true, message: '至少上传一张照片' },
                 ],
             },
-            pictureList: [],
             dialogImageUrl: '',
             dialogVisible: false,
             uploadUrl: api.uploadPicture + this.$route.params.id,

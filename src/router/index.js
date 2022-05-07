@@ -14,6 +14,7 @@ const manage = () => import('../page/manage')
 const signUp = () => import('../page/signUp')
 const edit = () => import('../page/edit')
 const newAlbum = () => import('../page/newAlbum')
+const editAlbum = () => import('../page/editAlbum')
 
 
 Vue.use(VueRouter)
@@ -82,6 +83,11 @@ const router = new VueRouter({
                 {
                     path: 'newAlbum',
                     component: newAlbum,
+                    meta: 'needAuth'
+                },
+                {
+                    path: 'editAlbum/:albumId',
+                    component: editAlbum,
                     meta: 'needAuth'
                 },
             ]

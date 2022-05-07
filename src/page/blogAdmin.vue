@@ -188,9 +188,15 @@ export default {
             } else if (command === 'upload') {
                 this.uploadDialogVisible = true;
             } else if (command === "logOut") {
-                window.sessionStorage.clear();
-                this.$message.success("注销成功！");
-                this.$router.push('/admin');
+                // 禁止在编辑相册页面注销
+                if (this.$route.path.indexOf('editAlbum') === -1
+                    && this.$route.path.indexOf('newAlbum') === -1) {
+                    this.$router.push('/admin');
+                    window.sessionStorage.clear();
+                    this.$message.success("注销成功！");
+                } else {
+                    this.$message.info("此页面禁用注销！");
+                }
             }
         },
         // 获取用户信息(包括密码)
