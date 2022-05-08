@@ -5,10 +5,7 @@
         </div>
         <el-divider></el-divider>
         <div class="user-content">
-            <userItem class="user-item"/>
-            <userItem class="user-item"/>
-            <userItem class="user-item"/>
-            <userItem class="user-item"/>
+            <userItem v-for="userinfo in userList" :userInfo="userinfo" :key="userinfo.id" class="user-item"/>
         </div>
 
     </div>
@@ -16,10 +13,27 @@
 
 <script>
 import userItem from "@/components/userItem";
+import {getAllUsers} from "@/utils/api";
+
 export default {
     name: "users",
+    created() {
+        this.getUsers();
+    },
     components: {
         userItem
+    },
+    data() {
+        return {
+            userList: [],
+        }
+    },
+    methods: {
+        async getUsers() {
+            const res = await getAllUsers();
+            console.log(res);
+            this.userList = res.data;
+        }
     }
 }
 </script>

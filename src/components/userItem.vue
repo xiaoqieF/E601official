@@ -2,41 +2,41 @@
     <!-- 显示用户基本信息的卡片 -->
     <el-card class="general-info">
         <div class="avatar">
-            <img :src="avatarUrl" alt="">
+            <img :src="userInfo.avatar" alt="">
         </div>
         <div class="moto">
-            所念皆星河
+            {{userInfo.moto}}
         </div>
         <div class="social">
             <a href="https://github.com/xiaoqieF" target="_blank" class="social-item"><i class="iconfont icon-github"></i></a>
-            <a href="mailto:17374527@buaa.edu.cn" target="_blank" class="social-item"><i class="iconfont icon-youxiang"></i></a>
+            <a :href="`mailto:${userInfo.email}`" target="_blank" class="social-item"><i class="iconfont icon-youxiang"></i></a>
         </div>
         <div class="more-info">
             <div class="nickname">
-                <span class="title">昵称：</span><a href="#">小切</a>
+                <span class="title">昵称：</span><a href="#">{{userInfo.nickname}}</a>
             </div>
             <div class="github">
-                <span class="title">github主页：</span><a href="https://github.com/xiaoqieF">https://github.com/xiaoqieF</a>
+                <span class="title">主页：</span><a :href=userInfo.site>{{userInfo.site}}</a>
             </div>
             <div class="email">
-                <span class="title">邮箱：</span><a href="mailto:17374527@buaa.edu.cn" target="_blank" class="social-item">17374527@buaa.edu.cn</a>
+                <span class="title">邮箱：</span><a :href="`mailto:${userInfo.email}`" target="_blank" class="social-item">{{userInfo.email}}</a>
             </div>
             <div class="create-time">
-                <span class="title">注册时间：</span> 2022-12-12
+                <span class="title">注册时间：</span> {{userInfo.createTime | dateFormat2}}
             </div>
             <div class="introduce">
                 <span class="title">简介：</span>
-                爱吃冰激凌
+                {{userInfo.description}}
             </div>
         </div>
         <!-- 统计信息 -->
         <div class="state">
             <router-link class="state-item" to="/archives">
-                <div>12</div>
+                <div>{{userInfo.blogNum}}</div>
                 <div>博客</div>
             </router-link>
             <router-link class="state-item" to="/categories">
-                <div>5</div>
+                <div>{{userInfo.albumNum}}</div>
                 <div>相册</div>
             </router-link>
         </div>
@@ -46,6 +46,7 @@
 <script>
 export default {
     name: "userItem",
+    props: ['userInfo'],
     data() {
         return {
             avatarUrl: "https://xiaodongfan.com/images/profile.png"

@@ -2,7 +2,7 @@
     <div class="container">
         <div class="img-clip1 img-clip"></div>
         <el-card class="blog-list" shadow="never">
-            <blog-summary v-for="blog in blogList" :blogInfo="blog" class="blog-item"/>
+            <blog-summary v-for="blog in blogList" :blogInfo="blog" :key="blog.id" class="blog-item"/>
             <div class="page">
                 <!-- 分页 -->
                 <el-pagination
@@ -19,7 +19,7 @@
         <div class="img-clip2 img-clip"></div>
         <el-card class="album">
             <div class="album-content">
-                <albumItem v-for="album in albumList" :albumInfo="album"/>
+                <albumItem v-for="album in albumList" :key="album.id" :albumInfo="album"/>
 
             </div>
         </el-card>

@@ -19,6 +19,7 @@
             <div v-else class="album-list">
                 <albumItemAdmin
                     v-for="(item, index) in this.albumList"
+                    :key="item.id"
                     :albumInfo="item"
                     :highlight="activeAlbum === index"
                     @click.native="handleClick(index)" />

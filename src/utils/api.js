@@ -28,7 +28,8 @@ const api = {
     getAlbumById: 'private/album/',
     updateAlbum: 'private/album',
     getAllBlogs: 'public/allBlogs/',
-    getAllAlbums: 'public/allAlbums'
+    getAllAlbums: 'public/allAlbums',
+    getAllUsers: 'public/allUsers',
 }
 
 export default api
@@ -245,5 +246,12 @@ export function getAllAlbums() {
     return axios({
         url: api.getAllAlbums,
         method: 'get',
+    })
+}
+
+export function getAllUsers() {
+    return axios({
+        url: api.getAllUsers,
+        method: 'get'
     })
 }
