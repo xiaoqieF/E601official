@@ -1,19 +1,19 @@
 <template>
     <el-row class="container" :gutter="20">
-        <el-col :xs="24" :md="18" :lg="18">
+        <el-col :xs="24" :md="20" :lg="20" :xl="16">
             <el-card>
                 <!-- 文章标题 -->
                 <div class="title">
-                    没人比我更懂火锅
+                    {{blog.title}}
                 </div>
                 <!-- 文章信息（发表时间、阅读次数等） -->
                 <div class="subtitle">
-                    <div><i class="el-icon-edit-outline"></i><span> 发表于 2022-12-12</span></div>
-                    <div><i class="el-icon-edit-outline"></i><span> 更新于 2022-12-12</span></div>
-                    <div><i class="el-icon-view"></i><span> 阅读次数 55</span></div>
+                    <div><i class="el-icon-edit-outline"></i><span> 发表于 {{blog.createTime | dateFormat2}}</span></div>
+                    <div><i class="el-icon-edit-outline"></i><span> 更新于 {{blog.updateTime | dateFormat2}}</span></div>
+                    <div><i class="el-icon-view"></i><span> 阅读次数 {{blog.views}}</span></div>
                 </div>
                 <!-- 文章内容 -->
-                <div ref="contentRef" id="content" class="content markdown-body line-numbers" v-html="content"></div>
+                <div ref="contentRef" id="content" class="content line-numbers markdown-body-my" v-html="blog.content"></div>
                 <div class="thanks">
                     ----- 本文结束，感谢您的阅读 -----
                 </div>
@@ -21,7 +21,7 @@
                 <el-card shadow="never" class="footer">
                     <div class="author">
                         <!-- 这里确保能够拿到数据，因为向服务器获取数据需要时间 -->
-                        <span>本文作者：</span><a href="https://github.com/xiaoqieF">小切</a>
+                        <span>本文作者：</span><a href="https://github.com/xiaoqieF">{{blog.user ? blog.user.nickname : ""}}</a>
                     </div>
                     <div class="copyright">
                         <span>版权声明：</span>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -29,7 +29,7 @@
                 </el-card>
                 <!-- 底部标签区 -->
                 <div class="foot-tag">
-                    <i class="iconfont icon-tags">标签</i>
+                    <i v-for="tag in blog.tags" :key="tag.id" class="iconfont icon-tags foot-tag-item">{{tag.name}}</i>
                 </div>
             </el-card>
             <!-- 评论区 -->
@@ -105,7 +105,7 @@
                 </el-card>
             </el-card>
         </el-col>
-        <el-col ref="sideRef" :xs="0" :md="6" :lg="6">
+        <el-col ref="sideRef" :xs="0" :md="4" :lg="4" :xl="4">
             <!-- 目录区域 -->
             <el-card :class="dirClass" ref="dirRef">
                 <div class="dir-title">
@@ -122,12 +122,17 @@
 <script>
 import Prism from 'prismjs'
 import * as tocbot from 'tocbot'
+import {getRenderedBlogById} from "@/utils/api";
 export default {
     name: 'detail',
     async created() {
-        // 这里使公式和代码格式化并不放在mounted中，因为created和mounted钩子使异步执行的
+        await this.getBlog();
+        console.log("got data")
+        // 这里使公式和代码格式化并不放在mounted中，因为created和mounted钩子是异步执行的
         // 可能会存在数据还未获取就渲染页面的情况
-        Prism.highlightAll()
+        console.log(this.$refs.contentRef);
+        Prism.highlightAllUnder(this.$refs.contentRef)
+        console.log("highlight")
         this.$formula(this.$refs.contentRef)
         tocbot.init({
             // Where to render the table of contents.
@@ -178,17 +183,32 @@ export default {
             commentPlaceholder: "请输入内容",
             // 目录标签的所属类，用于改变样式
             dirClass: '',
-            content:"<h1>你好，测试</h1>"
+            blog: {},
         }
     },
     methods: {
-
+        // 获取博客内容等
+        async getBlog() {
+            const res = await getRenderedBlogById(this.$route.params.blogId);
+            console.log(res);
+            this.blog = res.data;
+        },
+        scrollHandler(event) {
+            // console.log(this.$refs.sideRef)
+            // 根据目录标签距离顶部距离来实现贴合效果
+            if (this.$refs.sideRef.$el.getBoundingClientRect().top < 0) {
+                this.dirClass = 'dir-sticky'
+            } else {
+                this.dirClass = ''
+            }
+        },
     },
 }
 </script>
 
 <style lang='less' scoped>
 @import '../style/tocbot.css';
+@import "../style/github-mark.css";
 .container{
     margin-top: 20px;
 }
@@ -226,15 +246,12 @@ export default {
     }
 }
 .foot-tag{
+    margin-top: 20px;
     .foot-tag-item{
         display: inline-block;
-        padding: 10px;
         color: #409eff;
-        font-size: 28px;
-        margin-top: 10px;
-    }
-    .foot-tag-item:hover{
-        color: rgb(240, 62, 38);
+        font-size: 16px;
+        margin: 10px;
     }
 }
 .comment{
@@ -298,19 +315,6 @@ export default {
     padding-left: 60px;
 }
 
-.markdown-body {
-    box-sizing: border-box;
-    min-width: 200px;
-    max-width: 980px;
-    margin: 0 auto;
-    padding: 45px;
-}
-
-@media (max-width: 767px) {
-    .markdown-body {
-        padding: 15px;
-    }
-}
 .dir-sticky{
     position: fixed;
     top: 60px;
@@ -319,5 +323,24 @@ export default {
     padding-left: 10px;
     font-size: 18px;
     border-left: 4px solid #409eff;
+}
+
+//.content {
+//    padding: 60px;
+//    line-height: 2;
+//}
+
+.markdown-body-my {
+    box-sizing: border-box;
+    min-width: 200px;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 45px;
+}
+
+@media (max-width: 767px) {
+    .markdown-body-my {
+        padding: 15px;
+    }
 }
 </style>

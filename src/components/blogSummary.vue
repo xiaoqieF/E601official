@@ -27,10 +27,12 @@
             <el-col :span="8">
                 <div class="blog-picture">
                     <el-image
+                        v-if="blogInfo.firstPicture !== ''"
                         fit="cover"
                         :src="blogInfo.firstPicture"
                         :preview-src-list="[blogInfo.firstPicture]">
                     </el-image>
+                    <el-image v-else :src="defaultFirstPic" :preview-src-list="[defaultFirstPic]"></el-image>
                 </div>
             </el-col>
         </el-row>
@@ -43,7 +45,7 @@ export default {
     name: 'blogSummary',
     data() {
         return {
-            avatarUrl: "https://xiaodongfan.com/images/profile.png"
+            defaultFirstPic: require("../assets/default.jpg")
         }
     },
     methods: {

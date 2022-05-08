@@ -30,6 +30,7 @@ const api = {
     getAllBlogs: 'public/allBlogs/',
     getAllAlbums: 'public/allAlbums',
     getAllUsers: 'public/allUsers',
+    getRenderedBlogById: 'public/blog/'
 }
 
 export default api
@@ -249,9 +250,18 @@ export function getAllAlbums() {
     })
 }
 
+// 获取所有用户信息
 export function getAllUsers() {
     return axios({
         url: api.getAllUsers,
+        method: 'get'
+    })
+}
+
+// 获取html形式的博客
+export function getRenderedBlogById(blogId) {
+    return axios({
+        url: api.getRenderedBlogById + blogId,
         method: 'get'
     })
 }

@@ -13,8 +13,8 @@ Vue.use(mavonEditor)
 
 // 引入图标字体
 import "./assets/iconfont/iconfont.css"
-// 引入github-markdown样式
-import 'github-markdown-css/github-markdown.css'
+// 引入github-markdown样式(需要将该样式文件中和代码相关的删除！！！防止和prismjs冲突)
+// import 'github-markdown-css/github-markdown.css'
 // 数学公式katex支持
 import katex from 'katex'
 import 'katex/dist/katex.css'

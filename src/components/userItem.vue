@@ -8,7 +8,7 @@
             {{userInfo.moto}}
         </div>
         <div class="social">
-            <a href="https://github.com/xiaoqieF" target="_blank" class="social-item"><i class="iconfont icon-github"></i></a>
+            <a :href=userInfo.site target="_blank" class="social-item"><i class="iconfont icon-github"></i></a>
             <a :href="`mailto:${userInfo.email}`" target="_blank" class="social-item"><i class="iconfont icon-youxiang"></i></a>
         </div>
         <div class="more-info">
@@ -16,7 +16,7 @@
                 <span class="title">昵称：</span><a href="#">{{userInfo.nickname}}</a>
             </div>
             <div class="github">
-                <span class="title">主页：</span><a :href=userInfo.site>{{userInfo.site}}</a>
+                <span class="title">主页/Github：</span><a :href=userInfo.site>{{userInfo.site}}</a>
             </div>
             <div class="email">
                 <span class="title">邮箱：</span><a :href="`mailto:${userInfo.email}`" target="_blank" class="social-item">{{userInfo.email}}</a>

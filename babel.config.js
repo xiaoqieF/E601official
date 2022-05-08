@@ -11,5 +11,14 @@ module.exports = {
         styleLibraryName: "theme-chalk"
       }
     ],
+    [
+      'prismjs',
+      {
+        'languages': ['javascript', 'css', 'markup', 'python', 'html', 'java', 'c', 'cpp', 'cmake', 'git'],
+        'plugins': ['line-numbers'],
+        'theme': 'tomorrow',
+        'css': true
+      }
+    ]
   ]
 }
