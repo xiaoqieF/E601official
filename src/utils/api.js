@@ -27,6 +27,8 @@ const api = {
     deleteAlbum: 'private/album/',
     getAlbumById: 'private/album/',
     updateAlbum: 'private/album',
+    getAllBlogs: 'public/allBlogs/',
+    getAllAlbums: 'public/allAlbums'
 }
 
 export default api
@@ -226,5 +228,22 @@ export function updateAlbum(album) {
         url: api.updateAlbum,
         method: 'put',
         data: album
+    })
+}
+
+// 获取全部博客（分页形式）
+export function getAllBlogs(queryInfo) {
+    return axios({
+        url: api.getAllBlogs,
+        method: 'get',
+        params: queryInfo
+    })
+}
+
+// 获取全部用户的全部相册
+export function getAllAlbums() {
+    return axios({
+        url: api.getAllAlbums,
+        method: 'get',
     })
 }

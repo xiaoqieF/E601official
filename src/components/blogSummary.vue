@@ -5,31 +5,31 @@
             <el-col :span="16">
                 <!-- 标题 -->
                 <div class="title">
-                    <router-link :to="`/detail/1`">Spring揭秘</router-link>
+                    <router-link :to="`/detail/${blogInfo.id}`">{{ blogInfo.title }}</router-link>
                 </div>
                 <!-- 文章信息（发表时间、阅读次数等） -->
                 <div class="subtitle">
-                    <div><i class="el-icon-edit-outline"></i><span> 发表于 2022-04-26</span></div>
-                    <div><i class="el-icon-edit-outline"></i><span> 更新于 2022-04-26</span></div>
-                    <div><i class="el-icon-view"></i><span> 阅读次数 82</span></div>
+                    <div><i class="el-icon-edit-outline"></i><span> 发表于 {{blogInfo.createTime | dateFormat2}}</span></div>
+                    <div><i class="el-icon-edit-outline"></i><span> 更新于 {{ blogInfo.updateTime | dateFormat2 }}</span></div>
+                    <div><i class="el-icon-view"></i><span> 阅读次数 {{blogInfo.views}}</span></div>
                 </div>
 
-                <p class="content">这几天学习了卡尔曼滤波器（Kalman Filter）相关的理论知识，并发现了一个非常仔细的推导过程，是在b站上发现的一个搞控制的博士DR_CAN（文内有链接），看完他的卡尔曼滤波器相关的视频，加深了我对理论的理解，这里将视频中的推导过程加以梳理，以便日后查看。</p>
+                <p class="content">{{blogInfo.description}}</p>
                 <div class="author-info">
-                    <el-avatar size="small" :src="avatarUrl"></el-avatar>
+                    <el-avatar size="small" :src="blogInfo.user.avatar"></el-avatar>
                     <span style="display: inline-block; margin-left: 10px">by</span>
-                    <a href="#">小切</a>
+                    <a href="#">{{blogInfo.user.nickname}}</a>
                 </div>
                 <div class="btn">
-                    <el-button type="primary">阅读原文<i class="el-icon-right"></i></el-button>
+                    <el-button @click="$router.push(`/detail/${blogInfo.id}`)" type="primary">阅读原文<i class="el-icon-right"></i></el-button>
                 </div>
             </el-col>
             <el-col :span="8">
                 <div class="blog-picture">
                     <el-image
-                        style="width: 100%"
-                        :src="url"
-                        :preview-src-list="srcList">
+                        fit="cover"
+                        :src="blogInfo.firstPicture"
+                        :preview-src-list="[blogInfo.firstPicture]">
                     </el-image>
                 </div>
             </el-col>
@@ -43,10 +43,6 @@ export default {
     name: 'blogSummary',
     data() {
         return {
-            url: "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            srcList:[
-                "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
-            ],
             avatarUrl: "https://xiaodongfan.com/images/profile.png"
         }
     },
@@ -66,9 +62,10 @@ export default {
         font-weight: bold;
     }
     a:hover{
-        color: #409eff;
+        border-bottom: 2px solid #333;
     }
 }
+
 .subtitle{
     text-align: center;
     font-size: 16px;
@@ -103,6 +100,15 @@ export default {
     }
     a:hover{
         color: #409eff;
+    }
+}
+
+.blog-picture{
+    overflow: hidden;
+    height: 250px;
+    .el-image{
+        width: 100%;
+        height: 100%;
     }
 }
 </style>

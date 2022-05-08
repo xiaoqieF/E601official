@@ -25,8 +25,10 @@
 </template>
 
 <script>
+import Album from "@/page/album";
 export default {
     name: "albumItemAdmin",
+    components: {Album},
     props: ["albumInfo", "highlight"],
     data() {
         return {
@@ -81,5 +83,8 @@ export default {
         color: #888;
     }
 
+}
+.album-item:hover{
+    box-shadow: 0 0 8px 4px rgba(193, 168, 168, 0.29);
 }
 </style>

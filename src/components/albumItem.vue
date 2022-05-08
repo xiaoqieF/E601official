@@ -1,22 +1,25 @@
 <template>
     <div class="album-item">
-        <el-image :src="url" :preview-src-list="srcList"></el-image>
+        <div class="cover">
+            <el-image fit="cover" :src="previewUrls[0]" :preview-src-list="previewUrls"></el-image>
+        </div>
+
         <div class="album-title">
-            喀纳斯秋绪
+            {{albumInfo.title}}
         </div>
         <div class="device">
-            <span>设备：</span> <span>Mavic Air2</span>
+            <span>设备：</span> <span>{{albumInfo.device}}</span>
         </div>
         <div class="views">
-            <i class="iconfont icon-icon-test" style="color: #444"> 99 </i>
-            <i class="iconfont icon-icon-test1 like">88</i>
+            <i class="iconfont icon-icon-test" style="color: #444"> {{albumInfo.views}} </i>
+            <i class="iconfont icon-icon-test1 like">{{albumInfo.like}}</i>
         </div>
         <div class="album-author">
             <div>
-                <el-avatar size="small" :src="avatarUrl"></el-avatar>
-                <a href="#" style="display: inline-block; margin-left: 5px">小切</a>
+                <el-avatar size="small" :src="albumInfo.user.avatar"></el-avatar>
+                <a href="#" style="display: inline-block; margin-left: 5px">{{albumInfo.user.nickname}}</a>
             </div>
-            <span class="album-time"> 2022-04-26</span>
+            <span class="album-time"> {{albumInfo.createTime | dateFormat2}}</span>
         </div>
     </div>
 </template>
@@ -24,19 +27,28 @@
 <script>
 export default {
     name: "albumItem",
+    props: ['albumInfo'],
     data() {
         return {
-            url: "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            srcList:[
-                "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
-            ],
-            avatarUrl: "https://xiaodongfan.com/images/profile.png"
+        }
+    },
+    computed: {
+        previewUrls() {
+            return this.albumInfo.urls.split(' ')
         }
     }
 }
 </script>
 
 <style lang="less" scoped>
+.cover{
+    height: 200px;
+    overflow: hidden;
+    .el-image{
+        width: 100%;
+        height: 100%;
+    }
+}
 .album-item{
     margin-left: 1.5%;
     width: 22%;
@@ -48,10 +60,6 @@ export default {
     border: 1px solid #eee;
     .album-title{
         font-weight: 600;
-    }
-    .album-title:hover{
-        color: #409eff;
-        cursor: pointer;
     }
     .views{
         padding-bottom: 5px;

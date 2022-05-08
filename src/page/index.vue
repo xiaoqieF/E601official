@@ -35,9 +35,9 @@
                 </el-col>
             </el-row>
         </div>
-        <el-carousel height="80vh" :autoplay="true" :interval="5000">
+        <el-carousel height="100vh" :autoplay="true" :interval="5000">
             <el-carousel-item>
-                <img src="../assets/11.jpg" alt="" style="width: 100%">
+                <img src="../assets/c1.jpg" alt="" style="width: 100%">
             </el-carousel-item>
             <el-carousel-item>
                 <img src="../assets/Panos_00050305.jpeg" style="width: 100%" alt="">
