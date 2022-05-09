@@ -30,7 +30,10 @@ const api = {
     getAllBlogs: 'public/allBlogs/',
     getAllAlbums: 'public/allAlbums',
     getAllUsers: 'public/allUsers',
-    getRenderedBlogById: 'public/blog/'
+    getRenderedBlogById: 'public/blog/',
+    uploadBlogPicture: 'private/blog/blogPictures',
+    getCommentsByBlogId: 'public/comment/',
+    addComment: 'private/comment'
 }
 
 export default api
@@ -263,5 +266,35 @@ export function getRenderedBlogById(blogId) {
     return axios({
         url: api.getRenderedBlogById + blogId,
         method: 'get'
+    })
+}
+
+// 上传文章内的图片
+export function uploadBlogPicture(data) {
+    return axios({
+        url: api.uploadBlogPicture,
+        method: 'post',
+        data: data,
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': window.sessionStorage.getItem('token')
+        }
+    })
+}
+
+// 获取博客评论
+export function getCommentsByBlogId(blogId) {
+    return axios({
+        url: api.getCommentsByBlogId + blogId,
+        method: 'get',
+    })
+}
+
+// 添加评论
+export function addComment(comment) {
+    return axios({
+        url: api.addComment,
+        method: 'post',
+        data: comment
     })
 }

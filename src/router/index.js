@@ -20,6 +20,7 @@ const editAlbum = () => import('../page/editAlbum')
 Vue.use(VueRouter)
 
 const router = new VueRouter({
+    mode: 'history',
     routes: [
         {
             path: '/',

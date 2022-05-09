@@ -33,63 +33,59 @@
                 </div>
             </el-card>
             <!-- 评论区 -->
-            <el-card v-if="true" class="comment">
+            <el-card v-if="blog.commentEnable" class="comment">
                 <el-card shadow='never'>
                     <div class="comment-title">
                         评论区
                     </div>
-                    <!--<div class="comment-item" v-for="comment in comments" :key="comment.id">-->
+                    <div class="comment-item" v-for="comment in comments" :key="comment.id">
                         <div class="parent-comment">
-                            <!--<el-avatar v-if="false" :src='comment.avatar'></el-avatar>-->
-                            <el-avatar src='https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'></el-avatar>
+                            <el-avatar v-if="comment.avatar !== '' && comment.avatar !== null" :src='comment.avatar'></el-avatar>
+                            <el-avatar v-else src='https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'></el-avatar>
                             <div class="comment-main">
                                 <div class="comment-info">
-                                    <div class="nickname">小切</div>
-                                    <div class="create-time">2022-12-12</div>
+                                    <div class="nickname">{{comment.nickname}}</div>
+                                    <div class="create-time">{{comment.createTime | dateFormat}}</div>
                                 </div>
                                 <div class="comment-content">
-                                    哈哈哈
+                                    {{comment.content}}
                                 </div>
                             </div>
-                            <div class="reply">
+                            <div class="reply" @click="onReply(comment.id, comment.nickname)">
                                 回复
                             </div>
 
                         </div>
-                        <!--<div class="child-comment" v-for="childComment in comment.replyComments" :key="childComment.id">-->
-                            <el-avatar src='https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'></el-avatar>
+                        <div class="child-comment" v-for="childComment in comment.replyComments" :key="childComment.id">
+                            <el-avatar v-if="childComment.avatar !== '' && childComment.avatar !== null" :src='childComment.avatar'></el-avatar>
+                            <el-avatar v-else src='https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'></el-avatar>
                             <div class="comment-main">
                                 <div class="comment-info">
-                                    <div class="nickname">小切</div>
-                                    <div class="create-time">2022-1-12</div>
+                                    <div class="nickname">{{childComment.nickname}}</div>
+                                    <div class="create-time">{{childComment.createTime | dateFormat}}</div>
                                 </div>
                                 <div class="comment-content">
-                                    你好哇
+                                    {{childComment.content}}
                                 </div>
                             </div>
-                            <div class="reply">
+                            <div class="reply" @click="onReply(childComment.id, childComment.nickname)">
                                 回复
                             </div>
-                        <!--</div>-->
-                    <!--</div>-->
+                        </div>
+                    </div>
                 </el-card>
                 <el-card shadow='never'>
                     <el-form
                         :model="commentForm"
                         :rules="commentFormRules"
                         ref="commentFormRef">
-                        <el-form-item prop="nickname" class="comment-name">
-                            <el-input
-                                v-model="commentForm.nickname"
-                                placeholder="请输入昵称"
-                                prefix-icon="iconfont icon-person"></el-input>
-                        </el-form-item>
-                        <el-form-item prop="email" class="comment-email">
-                            <el-input
-                                v-model="commentForm.email"
-                                placeholder="请输入邮箱"
-                                prefix-icon="iconfont icon-youxiang"></el-input>
-                        </el-form-item>
+                        <div v-if="userInfo.id !== ''" class="user-info">
+                            <el-avatar :src='userInfo.avatar'></el-avatar>
+                            <span>小切</span>
+                        </div>
+                        <div v-else class="login">
+                            <a href="/admin">登录</a><span>发表评论</span>
+                        </div>
                         <el-form-item prop="content">
                             <el-input
                                 ref="commentContentRef"
@@ -99,8 +95,11 @@
                                 v-model="commentForm.content"></el-input>
                         </el-form-item>
                     </el-form>
-                    <el-button type="primary" size="mini">发布</el-button>
-                    <el-button type="info" size="mini">重置</el-button>
+                    <el-button type="primary"
+                               size="mini"
+                               @click="publishComment"
+                                :disabled="userInfo.id === ''">发布</el-button>
+                    <el-button type="info" size="mini" @click="clearComment">重置</el-button>
                     <div class="comment-tips">来评论吧~~~</div>
                 </el-card>
             </el-card>
@@ -122,11 +121,12 @@
 <script>
 import Prism from 'prismjs'
 import * as tocbot from 'tocbot'
-import {getRenderedBlogById} from "@/utils/api";
+import {addComment, getCommentsByBlogId, getRenderedBlogById, getUserById} from "@/utils/api";
 export default {
     name: 'detail',
     async created() {
         await this.getBlog();
+        await this.getComment();
         console.log("got data")
         // 这里使公式和代码格式化并不放在mounted中，因为created和mounted钩子是异步执行的
         // 可能会存在数据还未获取就渲染页面的情况
@@ -144,6 +144,7 @@ export default {
             // For headings inside relative or absolute positioned containers within content.
             hasInnerContainers: true,
         });
+        await this.getUserInfo();
     },
     mounted() {
         window.addEventListener('scroll', this.scrollHandler)
@@ -167,6 +168,7 @@ export default {
                 content: '',
                 parentCommentId: -1,
                 blogId: this.$route.params.blogId,
+                avatar: '',
             },
             commentFormRules: {
                 nickname: [
@@ -184,6 +186,11 @@ export default {
             // 目录标签的所属类，用于改变样式
             dirClass: '',
             blog: {},
+            comments:[],
+            // 如果登录了则获取用户信息
+            userInfo :{
+                id: ""
+            }
         }
     },
     methods: {
@@ -193,6 +200,18 @@ export default {
             console.log(res);
             this.blog = res.data;
         },
+        // 如果登录了则获取用户信息
+        async getUserInfo() {
+            let userId = window.sessionStorage.getItem("userId");
+            if (userId !== null) {
+                const res = await getUserById(userId);
+                console.log(res);
+                this.userInfo = res.data;
+                this.commentForm.avatar = res.data.avatar;
+                this.commentForm.email = res.data.email;
+                this.commentForm.nickname = res.data.nickname;
+            }
+        },
         scrollHandler(event) {
             // console.log(this.$refs.sideRef)
             // 根据目录标签距离顶部距离来实现贴合效果
@@ -201,6 +220,74 @@ export default {
             } else {
                 this.dirClass = ''
             }
+        },
+        // 获取当前页的评论信息
+        async getComment() {
+            const res = await getCommentsByBlogId(this.$route.params.blogId);
+            console.log(res)
+            if (res.code === 200) {
+                this.comments = res.data
+            } else {
+                this.$message.error('获取评论数据失败:' + res.message)
+            }
+            this.comments.forEach(comment => {
+                // 对每个一级评论的子评论进行扁平化处理
+                // 处理之后，评论只有两级
+                comment.replyComments = this.traverse(comment.nickname, comment.replyComments)
+            });
+            console.log(this.comments)
+        },
+
+        /**
+         * 将多级评论转化为数组评论，并在评论内容前加上对应的 @fatherName
+         * @param comments 需要扁平化处理的评论数组(多级评论)
+         * @param fatherName 当前评论数组的父亲名称
+         * @return *[]
+         */
+        traverse(fatherName, comments) {
+            if (comments.length === 0) {
+                return []
+            }
+            let results = []
+            comments.forEach( comment => {
+                comment.content = `@${fatherName}：${comment.content}`
+                results.push(comment)
+                results = [...results, ...this.traverse(comment.nickname, comment.replyComments)]
+                // 遍历完孩子之后，将孩子置为空
+                comment.replyComments = []
+            })
+            return results
+        },
+        // 点击回复时触发的回调
+        onReply(parentId, parentNickName) {
+            console.log(parentId, parentNickName)
+            this.commentForm.parentCommentId = parentId
+            this.commentPlaceholder = `@${parentNickName}`
+            this.$refs.commentFormRef.$el.scrollIntoView({behavior:'smooth'})
+        },
+        // 发布评论
+        publishComment() {
+            this.$refs.commentFormRef.validate(async valid => {
+                if (!valid) {
+                    return
+                }
+                const res = await addComment(this.commentForm);
+                console.log(res);
+                if (res.code !== 200) {
+                    this.$message.error(res.message);
+                    return;
+                }
+                this.$message.success("发布成功!");
+                this.clearComment();
+                await this.getComment();
+            })
+        },
+        // 重置评论
+        clearComment() {
+            this.commentForm.content = ''
+            this.commentForm.parentCommentId = -1
+            this.commentPlaceholder = "请输入内容"
+            this.$refs.commentFormRef.resetFields();
         },
     },
 }
@@ -325,11 +412,6 @@ export default {
     border-left: 4px solid #409eff;
 }
 
-//.content {
-//    padding: 60px;
-//    line-height: 2;
-//}
-
 .markdown-body-my {
     box-sizing: border-box;
     min-width: 200px;
@@ -343,4 +425,24 @@ export default {
         padding: 15px;
     }
 }
+
+.user-info {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    color: #409eff;
+    span{
+        display: inline-block;
+        margin-left: 10px;
+    }
+}
+
+.login{
+    a{
+        color:#409eff ;
+        display: inline-block;
+        margin: 10px 5px;
+    }
+}
+
 </style>

@@ -115,6 +115,7 @@ export default {
             if (res.code === 200) {
                 this.albumForm.urls.push(res.data.path);
             }
+            return this.$message.error("上传失败！");
         },
         // 用户刷新浏览器，相当于不保存修改，同样需要删除已经上传的照片
         beforeUnloadFn() {

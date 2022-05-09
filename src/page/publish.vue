@@ -24,7 +24,7 @@
             </el-form-item>
             <!-- markdown编辑器 -->
             <el-form-item prop="content">
-                <mavon-editor v-model="blog.content" ref="mdEditor"/>
+                <mavon-editor v-model="blog.content" ref="mdEditor" @imgAdd="mdImgAdd"/>
             </el-form-item>
             <el-form-item>
                 <el-checkbox label="开启赞赏" v-model="blog.appreciation"></el-checkbox>
@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import {getCateByUserId, getTagsByUserId} from "@/utils/api";
+import {getCateByUserId, getTagsByUserId, uploadBlogPicture} from "@/utils/api";
 import api from "@/utils/api";
 import {addBlog} from "@/utils/api";
 import {removeFirstPicture} from "@/utils/api";
@@ -180,6 +180,18 @@ export default {
             const res = await getTagsByUserId(this.$route.params.id);
             console.log(res);
             this.tagList = res.data;
+        },
+        // markdown编辑器添加图片时的回调
+        async mdImgAdd(pos, file) {
+            const formdata = new FormData()
+            formdata.append('file', file)
+            const res = await uploadBlogPicture(formdata);
+            console.log(res)
+            if (res.code !== 200) {
+                this.$message.error('图片上传失败：' + res.message);
+                return
+            }
+            this.$refs.mdEditor.$img2Url(pos, res.data.path)
         },
         // 保存博客
         saveBlog() {
