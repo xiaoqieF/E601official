@@ -10,14 +10,17 @@
         <div class="device">
             <span>设备：</span> <span>{{albumInfo.device}}</span>
         </div>
-        <div class="views">
-            <i class="iconfont icon-icon-test" style="color: #444"> {{albumInfo.views}} </i>
-            <i class="iconfont icon-icon-test1 like">{{albumInfo.like}}</i>
+        <!--<div class="views">-->
+        <!--    <i class="iconfont icon-icon-test" style="color: #444"> {{albumInfo.views}} </i>-->
+        <!--    <i class="iconfont icon-icon-test1 like">{{albumInfo.like}}</i>-->
+        <!--</div>-->
+        <div class="description">
+            <span>简介：</span>{{albumInfo.description}}
         </div>
         <div class="album-author">
             <div>
                 <el-avatar size="small" :src="albumInfo.user.avatar"></el-avatar>
-                <a href="#" style="display: inline-block; margin-left: 5px">{{albumInfo.user.nickname}}</a>
+                <a :href='`/person/${albumInfo.user.id}`' style="display: inline-block; margin-left: 5px">{{albumInfo.user.nickname}}</a>
             </div>
             <span class="album-time"> {{albumInfo.createTime | dateFormat2}}</span>
         </div>
@@ -51,11 +54,11 @@ export default {
 }
 .album-item{
     margin-left: 1.5%;
-    width: 22%;
+    width: 21%;
     font-size: 14px;
     line-height: 1.6;
     margin-bottom: 40px;
-    padding: 5px;
+    padding: 10px;
     border-radius: 0.2rem;
     border: 1px solid #eee;
     .album-title{

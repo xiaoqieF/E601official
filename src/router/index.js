@@ -15,7 +15,7 @@ const signUp = () => import('../page/signUp')
 const edit = () => import('../page/edit')
 const newAlbum = () => import('../page/newAlbum')
 const editAlbum = () => import('../page/editAlbum')
-
+const personPage = () => import('../page/personPage')
 
 Vue.use(VueRouter)
 
@@ -45,6 +45,10 @@ const router = new VueRouter({
                 {
                     path: '/detail/:blogId',
                     component: detail,
+                },
+                {
+                    path: '/person/:userId',
+                    component: personPage,
                 },
             ]
         },

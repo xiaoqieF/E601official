@@ -8,12 +8,12 @@
             {{userInfo.moto}}
         </div>
         <div class="social">
-            <a :href=userInfo.site target="_blank" class="social-item"><i class="iconfont icon-github"></i></a>
+            <a v-if="userInfo.site !== null && userInfo.site !== ''" :href=userInfo.site target="_blank" class="social-item"><i class="iconfont icon-github"></i></a>
             <a :href="`mailto:${userInfo.email}`" target="_blank" class="social-item"><i class="iconfont icon-youxiang"></i></a>
         </div>
         <div class="more-info">
             <div class="nickname">
-                <span class="title">昵称：</span><a href="#">{{userInfo.nickname}}</a>
+                <span class="title">昵称：</span><a :href="`/person/${userInfo.id}`">{{userInfo.nickname}}</a>
             </div>
             <div class="github">
                 <span class="title">主页/Github：</span><a :href=userInfo.site>{{userInfo.site}}</a>
@@ -31,11 +31,11 @@
         </div>
         <!-- 统计信息 -->
         <div class="state">
-            <router-link class="state-item" to="/archives">
+            <router-link class="state-item" :to="`/person/${userInfo.id}`">
                 <div>{{userInfo.blogNum}}</div>
                 <div>博客</div>
             </router-link>
-            <router-link class="state-item" to="/categories">
+            <router-link class="state-item" :to="`/person/${userInfo.id}`">
                 <div>{{userInfo.albumNum}}</div>
                 <div>相册</div>
             </router-link>

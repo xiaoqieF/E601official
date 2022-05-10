@@ -121,7 +121,7 @@
 <script>
 import Prism from 'prismjs'
 import * as tocbot from 'tocbot'
-import {addComment, getCommentsByBlogId, getRenderedBlogById, getUserById} from "@/utils/api";
+import {addComment, getCommentsByBlogId, getRenderedBlogById, getUserById, increaseBlogViews} from "@/utils/api";
 export default {
     name: 'detail',
     async created() {
@@ -145,6 +145,7 @@ export default {
             hasInnerContainers: true,
         });
         await this.getUserInfo();
+        await increaseBlogViews(this.$route.params.blogId);
     },
     mounted() {
         window.addEventListener('scroll', this.scrollHandler)

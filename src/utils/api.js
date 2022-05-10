@@ -14,6 +14,7 @@ const api = {
     addTag: `private/tags/`,
     deleteTag: `private/tags/`,
     getBlogsByUserId: `private/allBlogs/`,
+    getPublishedBlogsByUserId: `public/allBlogs/`,
     uploadFirstPicture: axios.defaults.baseURL + 'private/blog/firstPicture',
     removeFirstPicture: 'private/blog/firstPicture/',
     addBlog: 'private/blog',
@@ -23,7 +24,7 @@ const api = {
     uploadPicture:axios.defaults.baseURL + 'private/album/picture/',
     removePicture:'/private/album/picture/',
     addAlbum: 'private/album',
-    getAlbums: 'private/allAlbums/',
+    getAlbums: 'public/allAlbums/',
     deleteAlbum: 'private/album/',
     getAlbumById: 'private/album/',
     updateAlbum: 'private/album',
@@ -33,7 +34,11 @@ const api = {
     getRenderedBlogById: 'public/blog/',
     uploadBlogPicture: 'private/blog/blogPictures',
     getCommentsByBlogId: 'public/comment/',
-    addComment: 'private/comment'
+    addComment: 'private/comment',
+    getRawAbout: 'private/about',
+    updateAbout: 'private/about',
+    getAbout: 'public/about',
+    increaseBlogViews: '/public/blog/view/',
 }
 
 export default api
@@ -143,6 +148,16 @@ export function getBlogsByUserId(userId, queryInfo) {
         params: queryInfo
     })
 }
+
+// 获取用户的所有已发表博客
+export function getPublishedBlogsByUserId(userId, queryInfo) {
+    return axios({
+        url: api.getPublishedBlogsByUserId + userId,
+        method: 'get',
+        params: queryInfo
+    })
+}
+
 
 // 删除文章首图
 export function removeFirstPicture(relativePath) {
@@ -296,5 +311,38 @@ export function addComment(comment) {
         url: api.addComment,
         method: 'post',
         data: comment
+    })
+}
+
+// 获取关于(Markdown语法)
+export function getRawAbout() {
+    return axios({
+        url: api.getRawAbout,
+        method: 'get',
+    })
+}
+
+// 更新关于
+export function updateAbout(about) {
+    return axios({
+        url: api.updateAbout,
+        method: 'put',
+        data: about
+    })
+}
+
+// 获取关于(html)
+export function getAbout() {
+    return axios({
+        url: api.getAbout,
+        method: 'get',
+    })
+}
+
+// 更新博客阅读次数
+export function increaseBlogViews(blogId) {
+    return axios({
+        url: api.increaseBlogViews + blogId,
+        method: 'post',
     })
 }

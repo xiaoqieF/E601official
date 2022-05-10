@@ -18,7 +18,7 @@
                 <div class="author-info">
                     <el-avatar size="small" :src="blogInfo.user.avatar"></el-avatar>
                     <span style="display: inline-block; margin-left: 10px">by</span>
-                    <a href="#">{{blogInfo.user.nickname}}</a>
+                    <a :href='`/person/${blogInfo.user.id}`'>{{blogInfo.user.nickname}}</a>
                 </div>
                 <div class="btn">
                     <el-button @click="$router.push(`/detail/${blogInfo.id}`)" type="primary">阅读原文<i class="el-icon-right"></i></el-button>

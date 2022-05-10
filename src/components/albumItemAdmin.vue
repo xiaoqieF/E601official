@@ -9,9 +9,12 @@
         <div class="device">
             <span>设备：</span> <span>{{albumInfo.device}}</span>
         </div>
-        <div class="views">
-            <i class="iconfont icon-icon-test" style="color: #444"> {{ albumInfo.views }} </i>
-            <i class="iconfont icon-icon-test1 like">{{ albumInfo.like }}</i>
+        <!--<div class="views">-->
+        <!--    <i class="iconfont icon-icon-test" style="color: #444"> {{ albumInfo.views }} </i>-->
+        <!--    <i class="iconfont icon-icon-test1 like">{{ albumInfo.like }}</i>-->
+        <!--</div>-->
+        <div class="description">
+            <span>简介：</span>{{albumInfo.description}}
         </div>
         <div class="album-author">
             <div>

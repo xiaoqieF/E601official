@@ -35,7 +35,7 @@
                 </el-col>
             </el-row>
         </div>
-        <el-carousel height="100vh" :autoplay="true" :interval="5000">
+        <el-carousel height="70vh" :autoplay="true" :interval="5000">
             <el-carousel-item>
                 <img src="../assets/c1.jpg" alt="" style="width: 100%">
             </el-carousel-item>
@@ -57,7 +57,7 @@
                 <span>Copyright © 2021~2022 | </span> <a class="foot-link" target="_blank" href="https://beian.miit.gov.cn/#/Integrated/index">京ICP备2021039158号-1</a>
             </div>
             <div>
-                <span>Designed by <a href="#" style="color: #bbb">小切</a></span>
+                <span>Designed by <a href="https://xiaodongfan.com" style="color: #bbb">小切</a></span>
             </div>
         </div>
     </div>

@@ -45,6 +45,7 @@
                             <el-dropdown-item command="home">首页</el-dropdown-item>
                             <el-dropdown-item command="modify">修改个人信息</el-dropdown-item>
                             <el-dropdown-item command="upload">修改头像</el-dropdown-item>
+                            <el-dropdown-item v-if="userInfo.type === 0" command="editAbout">修改关于页面</el-dropdown-item>
                             <el-dropdown-item command="logOut">注销</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -119,11 +120,26 @@
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
         </el-dialog>
+
+        <el-dialog
+            title="修改关于(Markdown语法)"
+            :visible.sync="editDialogVisible"
+            width="60%">
+            <el-form :model="aboutForm" label-width="100px">
+                <el-form-item label="关于内容" prop="content">
+                    <el-input v-model="aboutForm.content" type="textarea" :rows="8"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer">
+                <el-button @click="editDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submitAbout">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import api, {getUserByIdPrivate} from "@/utils/api";
+import api, {getRawAbout, getUserByIdPrivate, updateAbout} from "@/utils/api";
 import {updateUser} from "@/utils/api";
 
 export default {
@@ -131,6 +147,7 @@ export default {
     created() {
         this.activeIndex = this.$route.path;
         this.getUserInfo();
+        this.getAbout();
     },
     data() {
         // 自定义邮箱验证规则
@@ -175,6 +192,10 @@ export default {
             },
             uploadDialogVisible:false,
             uploadUrl: api.uploadAvatar,
+            editDialogVisible: false,
+            aboutForm: {
+                content:''
+            }
         }
     },
     methods: {
@@ -197,6 +218,9 @@ export default {
                 } else {
                     this.$message.info("此页面禁用注销！");
                 }
+            } else if (command === "editAbout") {
+                this.getAbout();
+                this.editDialogVisible = true;
             }
         },
         // 获取用户信息(包括密码)
@@ -210,6 +234,12 @@ export default {
                 this.$message.error("请登录");
                 await this.$router.push("/admin");
             }
+        },
+        // 获取关于
+        async getAbout() {
+            const res = await getRawAbout();
+            console.log(res);
+            this.aboutForm = res.data;
         },
         // 取消修改个人信息
         handleModifyDialogClose() {
@@ -249,6 +279,16 @@ export default {
             }
             return isJPG && isLt2M;
         },
+        async submitAbout() {
+            const res = await updateAbout(this.aboutForm);
+            console.log(res);
+            if (res.code === 200) {
+                this.$message.success("修改成功！");
+                this.editDialogVisible = false;
+                return;
+            }
+            this.$message.error("修改失败！");
+        }
     },
     // 监听路由路径变化，改变当前导航栏激活项
     watch: {
