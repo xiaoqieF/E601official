@@ -13,13 +13,14 @@
                 <el-form-item label="简要描述" prop="description">
                     <el-input v-model="albumForm.description"></el-input>
                 </el-form-item>
-                <el-form-item prop="urls" label="上传照片(每张照片不超过10MB)：">
+                <el-form-item prop="urls" label="上传照片(每张照片不超过6MB)：">
                     <el-upload
                         :action="uploadUrl"
                         list-type="picture-card"
                         :on-success="handleSuccess"
                         :on-preview="handlePictureCardPreview"
                         :on-remove="handleRemove"
+                        :before-upload="beforeUpload"
                         :headers="uploadHeader"
                         multiple>
                         <i class="el-icon-plus"></i>
@@ -114,6 +115,7 @@ export default {
             console.log(res);
             if (res.code === 200) {
                 this.albumForm.urls.push(res.data.path);
+                return;
             }
             return this.$message.error("上传失败！");
         },
@@ -124,7 +126,16 @@ export default {
                 let path = url.split('/').pop();
                 removePicture(this.$route.params.id, path);
             })
-        }
+        },
+        beforeUpload(file) {
+            console.log(file.size);
+            const isLt6M = file.size / 1024 / 1024 < 6;
+
+            if (!isLt6M) {
+                this.$message.error('上传图片大小不能超过 6MB!');
+            }
+            return isLt6M;
+        },
     },
     async beforeRouteLeave(to, from, next) {
         console.log(this.albumForm.urls);

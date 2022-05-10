@@ -1,6 +1,6 @@
 import axios from "axios";
 import Vue from "vue";
-const baseUrl = 'http://127.0.0.1:8086/'
+const baseUrl = 'http://localhost:8086/'
 
 const service = axios.create({
     baseURL: baseUrl,

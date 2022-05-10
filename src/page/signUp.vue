@@ -23,6 +23,9 @@
                 <el-form-item label="个人简介" prop="description">
                     <el-input type="textarea" :rows="3" v-model="userForm.description"></el-input>
                 </el-form-item>
+                <el-form-item label="授权码" prop="authCode">
+                    <el-input v-model="userForm.authCode"></el-input>
+                </el-form-item>
                 <el-form-item prop="avatar">
                     <div class="buttons">
                         <el-upload
@@ -69,6 +72,8 @@ export default {
                 description: '',
                 avatar: '',
                 site: '',
+                type: 1,
+                authCode: ''
             },
             uploadUrl: api.uploadAvatar,
             userFormRules: {
@@ -93,6 +98,9 @@ export default {
                 ],
                 description: [
                     { required: true, message: '请输入个人简介', trigger: 'blur' },
+                ],
+                authCode: [
+                    { required: true, message: '请输入授权码', trigger: 'blur' },
                 ],
                 avatar: [
                     { required: true, message: '请上传头像', trigger: 'blur' },
@@ -124,7 +132,7 @@ export default {
             this.$refs.userFormRef.validate(async valid => {
                 if (valid) {
                     console.log(this.userForm)
-                    const res = await signup(this.userForm);
+                    const res = await signup(this.userForm, this.userForm.authCode);
                     console.log(res)
                     if (res.code !== 200) {
                         this.$message.error(res.message);

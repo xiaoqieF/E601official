@@ -234,6 +234,7 @@ export default {
             const data = await updateUser(this.$route.params.id, this.userInfo);
             if (data.code === 200) {
                 this.$message.success("上传头像成功！");
+                await this.getUserInfo();
             }
         },
         beforeAvatarUpload(file) {

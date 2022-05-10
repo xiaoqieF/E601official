@@ -4,7 +4,7 @@
             <el-card>
             <!-- 文章内容-->
                 <div ref="contentRef" class="content markdown-body line-numbers" v-html="description">
-                    测试
+
                 </div>
             </el-card>
         </el-col>

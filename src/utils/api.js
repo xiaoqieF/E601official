@@ -1,7 +1,7 @@
 import {axios} from "@/utils/request";
 
 const api = {
-    signup: 'public/signup',
+    signup: 'public/signup/',
     uploadAvatar: axios.defaults.baseURL + 'public/signup/upload',
     login: 'public/login',
     getUserById: `public/user/`,
@@ -39,9 +39,9 @@ const api = {
 export default api
 
 // 注册用户接口
-export function signup(data) {
+export function signup(data, authCode) {
     return axios({
-        url: api.signup,
+        url: api.signup + authCode,
         method: 'post',
         data: data
     })
