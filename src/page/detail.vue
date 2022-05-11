@@ -21,7 +21,7 @@
                 <el-card shadow="never" class="footer">
                     <div class="author">
                         <!-- 这里确保能够拿到数据，因为向服务器获取数据需要时间 -->
-                        <span>本文作者：</span><a href="https://github.com/xiaoqieF">{{blog.user ? blog.user.nickname : ""}}</a>
+                        <span>本文作者：</span><a :href="`/person/${blog.user.id}`">{{blog.user ? blog.user.nickname : ""}}</a>
                     </div>
                     <div class="copyright">
                         <span>版权声明：</span>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -81,7 +81,7 @@
                         ref="commentFormRef">
                         <div v-if="userInfo.id !== ''" class="user-info">
                             <el-avatar :src='userInfo.avatar'></el-avatar>
-                            <span>小切</span>
+                            <span>{{ userInfo.nickname }}</span>
                         </div>
                         <div v-else class="login">
                             <a href="/admin">登录</a><span>发表评论</span>

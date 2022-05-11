@@ -1,12 +1,15 @@
 <template>
     <div class="sign-up-container">
         <div class="form-container">
-            <el-form :model="userForm" :rules="userFormRules" ref="userFormRef" label-width="100px">
+            <el-form :model="userForm" :rules="userFormRules" ref="userFormRef" label-width="120px">
                 <el-form-item label="用户名" prop="username">
                     <el-input v-model="userForm.username"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
                     <el-input v-model="userForm.password" type="password"></el-input>
+                </el-form-item>
+                <el-form-item label="确认密码" prop="checkPass">
+                    <el-input v-model="userForm.checkPass" type="password"></el-input>
                 </el-form-item>
                 <el-form-item label="昵称" prop="nickname">
                     <el-input v-model="userForm.nickname"></el-input>
@@ -21,7 +24,7 @@
                     <el-input v-model="userForm.site"></el-input>
                 </el-form-item>
                 <el-form-item label="个人简介" prop="description">
-                    <el-input type="textarea" :rows="3" v-model="userForm.description"></el-input>
+                    <el-input type="textarea" :rows="2" v-model="userForm.description"></el-input>
                 </el-form-item>
                 <el-form-item label="授权码" prop="authCode">
                     <el-input v-model="userForm.authCode"></el-input>
@@ -49,7 +52,7 @@
 </template>
 
 <script>
-import {signup} from "@/utils/api";
+import {login, signup} from "@/utils/api";
 import api from "@/utils/api"
 export default {
     name: "signUp",
@@ -62,11 +65,33 @@ export default {
             }
             callback(new Error('邮箱格式错误'));
         };
+        // 定义密码验证规则
+        const validatePass = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请输入密码'));
+            } else {
+                if (this.userForm.password !== '') {
+                    this.$refs.userFormRef.validateField('checkPass');
+                }
+                callback();
+            }
+        };
+        // 确认密码验证
+        const validatePass2 = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请再次输入密码'));
+            } else if (value !== this.userForm.password) {
+                callback(new Error('两次输入密码不一致!'));
+            } else {
+                callback();
+            }
+        };
         return {
             userForm: {
                 username: '',
                 nickname: '',
                 password: '',
+                checkPass: '',
                 email: '',
                 moto: '',
                 description: '',
@@ -87,14 +112,19 @@ export default {
                 ],
                 password: [
                     { required: true, message: '请输入密码', trigger: 'blur' },
-                    { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+                    { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' },
+                    {validator: validatePass, trigger: 'blur'}
+                ],
+                checkPass: [
+                    { required: true, message: '请确认密码', trigger: 'blur' },
+                    {validator: validatePass2, trigger: 'blur'}
                 ],
                 email: [
                     { required: true, message: '请输入邮箱', trigger: 'blur' },
                     {validator: checkEmail, trigger: 'blur'},
                 ],
                 moto: [
-                    { required: true, message: '请输入座右铭', trigger: 'blur' },
+                    // { required: true, message: '请输入座右铭', trigger: 'blur' },
                 ],
                 description: [
                     { required: true, message: '请输入个人简介', trigger: 'blur' },
@@ -114,16 +144,17 @@ export default {
             this.userForm.avatar = res.data.path;
         },
         beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpeg';
+            console.log(file)
+            const isPic = file.type === 'image/jpeg' || file.type === 'image/png';
             const isLt2M = file.size / 1024 / 1024 < 2;
 
-            if (!isJPG) {
-                this.$message.error('上传头像图片只能是 JPG 格式!');
+            if (!isPic) {
+                this.$message.error('上传头像图片只能是 JPG或PNG 格式!');
             }
             if (!isLt2M) {
                 this.$message.error('上传头像图片大小不能超过 2MB!');
             }
-            return isJPG && isLt2M;
+            return isPic && isLt2M;
         },
         reset() {
             this.$refs.userFormRef.resetFields();
@@ -138,6 +169,12 @@ export default {
                         this.$message.error(res.message);
                     } else {
                         this.$message.success("注册成功！");
+                        // 注册成功时登录
+                        const res = await login(this.userForm);
+
+                        // 登录成功时保存服务端下发的token
+                        window.sessionStorage.setItem('token', res.data.token)
+                        window.sessionStorage.setItem('userId', res.data.user.id);
                         await this.$router.push("/home");
                     }
                 }

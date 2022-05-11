@@ -23,7 +23,7 @@
             <el-table-column prop="user.nickname" label="作者" width="60px"></el-table-column>
             <el-table-column label="分类" width="80px">
                 <template v-slot="scope">
-                    <el-tag size="small">{{ scope.row.type.name }}</el-tag>
+                    <el-tag v-if="scope.row.type" size="small">{{scope.row.type.name}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="标签" width="250px">

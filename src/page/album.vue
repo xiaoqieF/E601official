@@ -105,6 +105,7 @@ export default {
             console.log(res);
             if (res.code === 200) {
                 this.$message.success("删除相册成功！");
+                this.activeAlbum = -1;
                 await this.getAllAlbums();
                 return;
             }

@@ -70,6 +70,7 @@
             :on-success="handleSuccess"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
+            :before-upload="beforeUpload"
             :file-list="fileList"
             :headers="uploadHeader"
             :multiple="false"
@@ -78,6 +79,7 @@
             list-type="picture">
             <el-button size="small" type="primary">点击上传文章首图</el-button>
         </el-upload>
+        <span style="font-size: 12px">若不上传则采用默认图片</span>
         <div class="form-confirm">
             <el-button type="primary" size="small" @click="saveBlog">保存</el-button>
             <el-button type="primary" size="small" @click="submitBlog">发布</el-button>
@@ -94,7 +96,7 @@
 </template>
 
 <script>
-import {getCateByUserId, getTagsByUserId, uploadBlogPicture} from "@/utils/api";
+import {addBlog, getCateByUserId, getTagsByUserId, uploadBlogPicture} from "@/utils/api";
 import api from "@/utils/api";
 import {updateBlog} from "@/utils/api";
 import {removeFirstPicture} from "@/utils/api";
@@ -167,6 +169,15 @@ export default {
         handlePreview() {
             this.previewDialogVisible = true;
         },
+        beforeUpload(file) {
+            console.log(file.size);
+            const isLt6M = file.size / 1024 / 1024 < 6;
+
+            if (!isLt6M) {
+                this.$message.error('上传图片大小不能超过 6MB!');
+            }
+            return isLt6M;
+        },
         async handleRemove(file) {
             console.log(file)
             let res = await removeFirstPicture(file.url.split('/').pop());
@@ -196,22 +207,24 @@ export default {
             }
         },
         // 保存博客
-        saveBlog() {
-            this.$refs.blogFormRef.validate(async valid => {
-                if (valid) {
-                    const res = await updateBlog(this.blog);
-                    if (res.code === 200) {
-                        this.$message.success("保存成功！");
-                        await this.$router.push(`/admin/${this.$route.params.id}/manage`);
-                    }
+        async saveBlog() {
+            if (this.blog.title !== '' || this.blog.description !== '' || this.blog.content !== ''
+                || this.blog.typeId !== '' || this.blog.tagId.length !== 0) {
+                const res = await updateBlog(this.blog);
+                console.log(res);
+                if (res.code === 200) {
+                    this.$message.success("保存成功！");
+                    await this.$router.push(`/admin/${this.$route.params.id}/manage`);
                 }
-            })
+            } else {
+                this.$message.error("保存失败，空白博客！");
+            }
         },
         // 发布博客
         submitBlog() {
-            this.blog.published = true;
             this.$refs.blogFormRef.validate(async valid => {
                 if (valid) {
+                    this.blog.published = true;
                     const res = await updateBlog(this.blog);
                     if (res.code === 200) {
                         this.$message.success("发布成功！");

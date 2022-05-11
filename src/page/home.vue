@@ -20,7 +20,6 @@
         <el-card class="album">
             <div class="album-content">
                 <albumItem v-for="album in albumList" :key="album.id" :albumInfo="album"/>
-
             </div>
         </el-card>
     </div>

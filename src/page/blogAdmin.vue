@@ -3,7 +3,7 @@
         <el-row class="header">
             <el-col :span="4" class="admin-logo">
                 <div class="logo-content">
-                    个人中心
+                    <router-link class="logo-content" to="/home">返回首页</router-link>
                 </div>
             </el-col>
             <!-- 导航栏 -->
@@ -16,6 +16,7 @@
                     active-text-color="#fff"
                     router>
                     <!-- 这里使用了路由路径参数，其值为用户的id -->
+
                     <el-menu-item
                         :index="`/admin/${this.$route.params.id}/publish`">
                         <i class="el-icon-s-home"></i>
@@ -74,6 +75,7 @@
         <el-dialog
             title="修改个人信息"
             :visible.sync="modifyDialogVisible"
+            :close-on-click-modal="false"
             width="50%"
             @close="handleModifyDialogClose">
             <el-form :model="userInfo" :rules="userFormRules" ref="userFormRef" label-width="100px">
@@ -109,6 +111,7 @@
         <el-dialog
             title="上传头像"
             :visible.sync="uploadDialogVisible"
+            :close-on-click-modal="false"
             width="30%">
             <el-upload
                 class="el-upload"
@@ -124,6 +127,7 @@
         <el-dialog
             title="修改关于(Markdown语法)"
             :visible.sync="editDialogVisible"
+            :close-on-click-modal="false"
             width="60%">
             <el-form :model="aboutForm" label-width="100px">
                 <el-form-item label="关于内容" prop="content">
@@ -347,7 +351,7 @@ export default {
 }
 .logo-content{
     text-align: center;
-    color: #409eff;
+    color: #bbb;
     font-size: 20px;
     font-weight: bold;
     padding: 15px 0;

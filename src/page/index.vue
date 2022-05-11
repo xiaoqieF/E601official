@@ -42,6 +42,9 @@
             <el-carousel-item>
                 <img src="../assets/c2.jpg" style="width: 100%" alt="">
             </el-carousel-item>
+            <el-carousel-item>
+                <img src="../assets/c3.jpg" style="width: 100%" alt="">
+            </el-carousel-item>
         </el-carousel>
 
         <!--主体部分-->

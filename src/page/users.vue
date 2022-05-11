@@ -52,10 +52,10 @@ export default {
 }
 .user-content{
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
     .user-item{
         margin-bottom: 20px;
+        margin-right: 3%;
     }
 }
 </style>
