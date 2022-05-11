@@ -40,8 +40,8 @@ export default {
     data() {
         return {
             loginForm: {
-                username: 'xiaoqie',
-                password: '123456',
+                username: '',
+                password: '',
             },
             // 表单验证规则
             rules: {

@@ -125,6 +125,7 @@ import {addComment, getCommentsByBlogId, getRenderedBlogById, getUserById, incre
 export default {
     name: 'detail',
     async created() {
+        await increaseBlogViews(this.$route.params.blogId);
         await this.getBlog();
         await this.getComment();
         console.log("got data")
@@ -145,7 +146,6 @@ export default {
             hasInnerContainers: true,
         });
         await this.getUserInfo();
-        await increaseBlogViews(this.$route.params.blogId);
     },
     mounted() {
         window.addEventListener('scroll', this.scrollHandler)

@@ -40,7 +40,7 @@
                 <img src="../assets/c1.jpg" alt="" style="width: 100%">
             </el-carousel-item>
             <el-carousel-item>
-                <img src="../assets/Panos_00050305.jpeg" style="width: 100%" alt="">
+                <img src="../assets/c2.jpg" style="width: 100%" alt="">
             </el-carousel-item>
         </el-carousel>
 
