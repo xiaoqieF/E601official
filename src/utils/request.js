@@ -1,6 +1,12 @@
 import axios from "axios";
 import Vue from "vue";
-const baseUrl = 'http://e601.top:8086/'
+
+let baseUrl;
+if (process.env.NODE_ENV === 'production') {
+    baseUrl = 'http://e601.top/'
+} else {
+    baseUrl = 'http://localhost:8086/'
+}
 
 const service = axios.create({
     baseURL: baseUrl,
