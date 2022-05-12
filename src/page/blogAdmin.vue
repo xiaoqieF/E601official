@@ -64,7 +64,7 @@
         <!-- 底部信息 -->
         <div class="footer">
             <div class="copyright">
-                <span>Copyright © 2021~2022 | </span> <a class="foot-link" target="_blank" href="https://beian.miit.gov.cn/#/Integrated/index">京ICP备2021039158号-1</a>
+                <span>Copyright © 2021~2022 | </span> <a class="foot-link" target="_blank" href="https://beian.miit.gov.cn/#/Integrated/index">京ICP备2022005531号</a>
             </div>
             <div>
                 <span>Designed by <a href="#" style="color: #bbb">小切</a></span>

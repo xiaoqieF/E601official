@@ -202,6 +202,9 @@ export default {
             const res = await getRawBlogById(this.$route.params.blogId);
             console.log(res);
             this.blog = res.data;
+            if (this.blog.typeId === null) {
+                this.blog.typeId = '';
+            }
             if (res.data.firstPicture != null && res.data.firstPicture !== "") {
                 this.fileList = [{name: res.data.firstPicture.split('/').pop(), url: res.data.firstPicture}]
             }
@@ -210,6 +213,7 @@ export default {
         async saveBlog() {
             if (this.blog.title !== '' || this.blog.description !== '' || this.blog.content !== ''
                 || this.blog.typeId !== '' || this.blog.tagId.length !== 0) {
+                this.blog.published = false;
                 const res = await updateBlog(this.blog);
                 console.log(res);
                 if (res.code === 200) {

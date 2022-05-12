@@ -209,6 +209,7 @@ export default {
             // 用户填写部分域
             if (this.blog.title !== '' || this.blog.description !== '' || this.blog.content !== ''
             || this.blog.typeId !== '' || this.blog.tagId.length !== 0) {
+                this.blog.published = false;
                 const res = await addBlog(this.blog);
                 if (res.code === 200) {
                     this.$message.success("保存成功！");

@@ -3,7 +3,7 @@ import Vue from "vue";
 
 let baseUrl;
 if (process.env.NODE_ENV === 'production') {
-    baseUrl = 'http://e601.top/'
+    baseUrl = 'http://e601.top:8086/'
 } else {
     baseUrl = 'http://localhost:8086/'
 }
