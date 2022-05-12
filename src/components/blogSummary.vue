@@ -30,7 +30,8 @@
                         v-if="blogInfo.firstPicture !== ''"
                         fit="cover"
                         :src="blogInfo.firstPicture"
-                        :preview-src-list="[blogInfo.firstPicture]">
+                        :preview-src-list="[blogInfo.firstPicture]"
+                        lazy>
                     </el-image>
                     <el-image v-else :src="defaultFirstPic" :preview-src-list="[defaultFirstPic]"></el-image>
                 </div>

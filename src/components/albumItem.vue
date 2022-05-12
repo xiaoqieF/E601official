@@ -1,7 +1,7 @@
 <template>
     <div class="album-item">
         <div class="cover">
-            <el-image fit="cover" :src="previewUrls[0]" :preview-src-list="previewUrls"></el-image>
+            <el-image fit="cover" :src="previewUrls[0]" :preview-src-list="previewUrls" lazy></el-image>
         </div>
 
         <div class="album-title">
